@@ -3,12 +3,12 @@
 A web-based Rental Management System built using Python and Django.
 This platform allows owners to list rental items and users to browse, book, and rent equipment online.
 
-## 📌 Project Description
+## Project Description
 
 The Rental Management System is designed to simplify the process of renting tools, electronics, and other equipment.
 Owners can upload items with details, while users can search, book, and make payments through the platform.
 
-## 🚀 Features
+## Features
 
 * User registration and login
 * Owner registration with document verification
@@ -20,7 +20,7 @@ Owners can upload items with details, while users can search, book, and make pay
 * Booking management
 * Review and rating system
 
-## 🛠️ Technologies Used
+## Technologies Used
 
 * Python
 * Django
@@ -30,7 +30,7 @@ Owners can upload items with details, while users can search, book, and make pay
 * SQLite
 * Razorpay (for payments)
 
-## 📂 Project Structure
+## Project Structure
 
 ```
 rental_project/
@@ -43,7 +43,7 @@ rental_project/
 └── db.sqlite3
 ```
 
-## ⚙️ Installation Steps
+## Installation Steps
 
 1. Clone the repository
 
@@ -81,11 +81,11 @@ python manage.py runserver
 http://127.0.0.1:8000/
 ```
 
-## 👩‍💻 Author
+## Author
 
 Sree Nandhana
 MCA Student
 
-## 📄 License
+## License
 
 This project is created for educational purposes.
