@@ -1,0 +1,488 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book {{ item.name }} | RentalHub</title>
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #f0f9ff 100%);
+            color: #334155;
+            min-height: 100vh;
+        }
+
+        .booking-container {
+            max-width: 800px;
+            margin: 2rem auto;
+        }
+
+        .booking-card {
+            background: #ffffff;
+            border-radius: 24px;
+            border: 1px solid #e0f2fe;
+            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.05);
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .booking-card:hover {
+            box-shadow: 0 25px 50px rgba(37, 99, 235, 0.08);
+            border-color: #93c5fd;
+        }
+
+        h2 {
+            color: #0f172a;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            margin-bottom: 2rem;
+        }
+
+        .item-summary {
+            background: #f8fafc;
+            border: 1px solid #e0f2fe;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .item-image-small {
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 1px solid #dbeafe;
+        }
+
+        .item-details h4 {
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 0.3rem;
+        }
+
+        .item-details p {
+            color: #64748b;
+            margin-bottom: 0.2rem;
+        }
+
+        .item-price {
+            color: #2563eb;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #334155;
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-label i {
+            color: #2563eb;
+            font-size: 1rem;
+        }
+
+        .form-control {
+            border: 1px solid #dbeafe;
+            border-radius: 12px;
+            padding: 0.8rem 1rem;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            background: #f8fafc;
+            width: 100%;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-control:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+            outline: none;
+            background: #ffffff;
+        }
+
+        .form-control[readonly] {
+            background: #eff6ff;
+            cursor: not-allowed;
+        }
+
+        .price-breakdown {
+            background: #f8fafc;
+            border: 1px solid #e0f2fe;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .breakdown-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #e0f2fe;
+        }
+
+        .breakdown-row:last-child {
+            border-bottom: none;
+        }
+
+        .breakdown-label {
+            color: #475569;
+            font-weight: 500;
+        }
+
+        .breakdown-value {
+            color: #2563eb;
+            font-weight: 600;
+        }
+
+        .advance-row {
+            background: #eff6ff;
+            margin: 0 -1.5rem;
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #dbeafe;
+            border-bottom: 1px solid #dbeafe;
+        }
+
+        .advance-label {
+            color: #856404;
+            font-weight: 600;
+        }
+
+        .advance-value {
+            color: #856404;
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
+
+        .total-row {
+            margin-top: 1rem;
+        }
+
+        .total-label {
+            color: #0f172a;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .total-value {
+            color: #0f172a;
+            font-weight: 700;
+            font-size: 1.8rem;
+        }
+
+        .balance-row {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px dashed #dbeafe;
+        }
+
+        .btn-confirm {
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 14px;
+            padding: 1rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            width: 100%;
+            transition: all 0.2s ease;
+            margin-top: 1rem;
+        }
+
+        .btn-confirm:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-back {
+            background: transparent;
+            color: #2563eb;
+            border: 1px solid #dbeafe;
+            border-radius: 12px;
+            padding: 0.8rem 1.5rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-back:hover {
+            background: #eff6ff;
+            border-color: #2563eb;
+            transform: translateY(-2px);
+        }
+
+        .info-note {
+            background: #eff6ff;
+            border: 1px solid #dbeafe;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1.5rem;
+            color: #1e40af;
+        }
+
+        .info-note i {
+            margin-right: 0.5rem;
+        }
+
+        .alert {
+            border-radius: 12px;
+            border: 1px solid #e0f2fe;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            border-color: #ffe8a1;
+            color: #856404;
+        }
+
+        .alert-danger {
+            background: #fee9e7;
+            border-color: #fcc5c5;
+            color: #b91c1c;
+        }
+
+        @media (max-width: 768px) {
+            .booking-card {
+                padding: 1.5rem;
+            }
+            
+            .item-summary {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+            
+            .total-value {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="booking-container" data-aos="fade-up">
+    <!-- Back Button -->
+    <a href="{% url 'rentals:item_detail' item.id %}" class="btn-back">
+        <i class="bi bi-arrow-left"></i> Back to Item
+    </a>
+
+    <div class="booking-card">
+        <h2 class="text-center">Confirm Your Booking</h2>
+        <p class="subtitle text-center">Review the details and confirm your rental request</p>
+
+        <!-- Item Summary -->
+        <div class="item-summary">
+            {% if item.image %}
+            <img src="{{ item.image.url }}" class="item-image-small" alt="{{ item.name }}">
+            {% else %}
+            <div class="item-image-small bg-light d-flex align-items-center justify-content-center">
+                <i class="bi bi-image text-muted"></i>
+            </div>
+            {% endif %}
+            <div class="item-details">
+                <h4>{{ item.name }}</h4>
+                <p><i class="bi bi-shop me-1"></i>{{ item.owner.username }}</p>
+                <span class="item-price">₹{{ item.price_per_day|floatformat:0 }}/day</span>
+            </div>
+        </div>
+
+        <!-- Booking Form -->
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="form-label">
+                        <i class="bi bi-calendar-plus"></i> Start Date
+                    </label>
+                    <input type="date" name="start_date" class="form-control" value="{{ request.GET.start_date }}" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">
+                        <i class="bi bi-calendar-minus"></i> End Date
+                    </label>
+                    <input type="date" name="end_date" class="form-control" value="{{ request.GET.end_date }}" required>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="form-label">
+                        <i class="bi bi-box"></i> Quantity
+                    </label>
+                    <input type="number" name="quantity" class="form-control" min="1" max="{{ item.quantity }}" value="1" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">
+                        <i class="bi bi-shield-check"></i> Security Deposit
+                    </label>
+                    <input type="text" class="form-control" value="₹{{ item.security_deposit|default:'500'|floatformat:0 }}" readonly disabled>
+                </div>
+            </div>
+
+            <!-- Price Breakdown (static example - should be calculated with JS or passed from view) -->
+            <div class="price-breakdown">
+                <h6 class="fw-bold mb-3">Price Breakdown</h6>
+                
+                <div class="breakdown-row">
+                    <span class="breakdown-label">Rental Period:</span>
+                    <span class="breakdown-value">{{ total_days|default:"0" }} days</span>
+                </div>
+                
+                <div class="breakdown-row">
+                    <span class="breakdown-label">Price per day:</span>
+                    <span class="breakdown-value">₹{{ item.price_per_day|floatformat:0 }}</span>
+                </div>
+                
+                <div class="breakdown-row">
+                    <span class="breakdown-label">Quantity:</span>
+                    <span class="breakdown-value">{{ request.GET.quantity|default:"1" }}</span>
+                </div>
+                
+                <div class="breakdown-row">
+                    <span class="breakdown-label">Subtotal:</span>
+                    <span class="breakdown-value">₹{{ subtotal|floatformat:0|default:"0" }}</span>
+                </div>
+                
+                <div class="breakdown-row">
+                    <span class="breakdown-label">Security Deposit:</span>
+                    <span class="breakdown-value">₹{{ item.security_deposit|default:'500'|floatformat:0 }}</span>
+                </div>
+
+                <div class="advance-row">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="advance-label"><i class="bi bi-credit-card me-2"></i>Advance Payment (30%)</span>
+                        <span class="advance-value">₹{{ advance_paid|floatformat:0|default:"0" }}</span>
+                    </div>
+                    <small class="text-muted d-block mt-1">Refundable if owner rejects</small>
+                </div>
+
+                <div class="total-row d-flex justify-content-between align-items-center">
+                    <span class="total-label">Total Amount</span>
+                    <span class="total-value">₹{{ total_price|floatformat:0|default:"0" }}</span>
+                </div>
+
+                <div class="balance-row d-flex justify-content-between align-items-center">
+                    <span class="breakdown-label">Balance at pickup:</span>
+                    <span class="breakdown-value fs-5 fw-bold">₹{{ balance_amount|floatformat:0|default:"0" }}</span>
+                </div>
+            </div>
+
+            <!-- Terms and Conditions -->
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="termsCheck" required>
+                <label class="form-check-label" for="termsCheck">
+                    I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">terms and conditions</a> and understand that the advance payment is refundable if the owner rejects my request.
+                </label>
+            </div>
+
+            <!-- Info Note -->
+            <div class="info-note">
+                <i class="bi bi-info-circle"></i>
+                <strong>Note:</strong> Your booking request will be sent to the owner for approval. You'll receive a confirmation once they respond.
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn-confirm">
+                <i class="bi bi-check-circle me-2"></i>Confirm Booking Request
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Terms Modal -->
+<div class="modal fade" id="termsModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Terms and Conditions</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <h6>1. Booking Process</h6>
+                <p>Your booking request is subject to owner approval. You'll be notified once the owner responds.</p>
+                
+                <h6>2. Advance Payment</h6>
+                <p>A 30% advance payment is required to confirm your booking. This amount is refundable if the owner rejects your request or if you cancel within 24 hours of booking.</p>
+                
+                <h6>3. Cancellation Policy</h6>
+                <p>Cancellations made after owner approval may incur charges. Please contact the owner directly for cancellations.</p>
+                
+                <h6>4. Security Deposit</h6>
+                <p>The security deposit will be returned after the rental period, subject to item condition inspection.</p>
+                
+                <h6>5. Rental Period</h6>
+                <p>The rental period includes both start and end dates. Extensions must be approved by the owner.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init({
+        duration: 600,
+        once: true,
+        offset: 20
+    });
+
+    // Set minimum dates for date inputs
+    document.addEventListener('DOMContentLoaded', function() {
+        const today = new Date();
+        const minDate = new Date(today);
+        minDate.setDate(today.getDate() + 2);
+        const minStr = minDate.toISOString().split('T')[0];
+        
+        const dateInputs = document.querySelectorAll('input[type="date"]');
+        dateInputs.forEach(input => {
+            input.min = minStr;
+        });
+    });
+</script>
+
+</body>
+</html>
+{% endblock %}

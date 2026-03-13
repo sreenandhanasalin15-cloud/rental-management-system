@@ -1,0 +1,150 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Nearby Rentals</title> -->
+
+    <!-- Leaflet CSS -->
+    <!-- <link rel="stylesheet"
+          href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
+    <style>
+        #map { height: 500px; }
+    </style>
+</head>
+<body>
+
+<h2>Nearby Rental Items</h2>
+
+<button onclick="getLocation()">Find Nearby Items</button>
+
+<div id="map"></div> -->
+
+<!-- Leaflet JS -->
+<!-- <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+
+            window.location.href = `/nearby/?lat=${lat}&lng=${lng}`;
+        });
+    } else {
+        alert("Geolocation not supported");
+    }
+}
+</script>
+
+{% if user_lat and user_lng %}
+<script>
+    const userLat = JSON.parse('{{ user_lat|escapejs }}');
+    const userLng = JSON.parse('{{ user_lng|escapejs }}');
+
+    const map = L.map('map').setView([userLat, userLng], 13); -->
+
+    <!-- L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    L.marker([userLat, userLng])
+        .addTo(map)
+        .bindPopup("You are here")
+        .openPopup();
+
+    const items = JSON.parse('{{ items_json|escapejs }}');
+
+    items.forEach(item => {
+        L.marker([item.lat, item.lng])
+            .addTo(map)
+            .bindPopup(
+                `<b>${item.name}</b><br>
+                 ₹${item.price} per day<br>
+                 ${item.distance} km away`
+            );
+    });
+</script>
+{% endif %}
+
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Nearby Rentals</title>
+
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
+    <style>
+        #map { height: 500px; margin-top:20px; }
+    </style>
+</head>
+<body>
+
+<h2>Nearby Rental Items</h2>
+
+<button onclick="getLocation()">Find Nearby Items</button>
+
+<div id="map"></div>
+
+{% for item in items %}
+<div class="card">
+    <h3>{{ item.name }}</h3>
+    <p>Price per day: ₹{{ item.price_per_day }}</p>
+    <p>Distance: {{ item.distance }} km</p>
+</div>
+{% endfor %}
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+
+            window.location.href = `/items/nearby/?lat=${lat}&lng=${lng}`;
+        });
+    } else {
+        alert("Geolocation not supported");
+    }
+}
+</script>
+
+{% if user_lat and user_lng %}
+<script>
+    const userLat = JSON.parse('{{ user_lat|escapejs }}');
+    const userLng = JSON.parse('{{ user_lng|escapejs }}');
+
+    const map = L.map('map').setView([userLat, userLng], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    L.marker([userLat, userLng])
+        .addTo(map)
+        .bindPopup("You are here")
+        .openPopup();
+
+    const items = JSON.parse('{{ items_json|escapejs }}');
+
+    items.forEach(item => {
+    L.marker([item.lat, item.lng])
+        .addTo(map)
+        .bindPopup(
+            `<b>${item.name}</b><br>
+             <span style="color: #2563eb;">${item.category_display}</span><br>
+             ₹${item.price} per day<br>
+             ${item.distance} km away`
+        );
+    });
+</script>
+{% endif %}
+
+</body>
+</html>

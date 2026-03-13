@@ -1,0 +1,200 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Booking Pending | RentalHub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #f0f9ff 100%);
+            color: #334155;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .pending-card {
+            background: #ffffff;
+            border-radius: 24px;
+            border: 1px solid #e0f2fe;
+            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.05);
+            padding: 2.5rem;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .pending-icon {
+            width: 90px;
+            height: 90px;
+            background: #fff3cd;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            border: 3px solid #ffe8a1;
+        }
+
+        .pending-icon i {
+            font-size: 3.5rem;
+            color: #856404;
+        }
+
+        h2 {
+            color: #0f172a;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .booking-details {
+            background: #f8fafc;
+            border: 1px solid #e0f2fe;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e0f2fe;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .detail-value {
+            color: #2563eb;
+            font-weight: 600;
+        }
+
+        .refund-note {
+            background: #eff6ff;
+            border: 1px solid #dbeafe;
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .refund-note i {
+            color: #2563eb;
+        }
+
+        .btn-dashboard {
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 0.8rem 2rem;
+            font-weight: 600;
+            width: 100%;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .btn-dashboard:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="pending-card">
+        <div class="pending-icon">
+            <i class="bi bi-clock-history"></i>
+        </div>
+        
+        <h2 class="text-center">Booking Request Sent!</h2>
+        <p class="text-muted text-center">Waiting for owner's approval</p>
+
+        <div class="booking-details">
+            <h6 class="mb-3" style="color: #2563eb;">Booking Summary</h6>
+            
+            <div class="detail-row">
+                <span class="detail-label">Item:</span>
+                <span class="detail-value">{{ booking.item.name }}</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">Owner:</span>
+                <span class="detail-value">{{ owner.username }}</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">Dates:</span>
+                <span class="detail-value">{{ booking.start_date }} to {{ booking.end_date }}</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">Duration:</span>
+                <span class="detail-value">{{ days }} days</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">Quantity:</span>
+                <span class="detail-value">{{ booking.quantity }}</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">Advance Paid (30%):</span>
+                <span class="detail-value text-warning">₹{{ advance_paid|floatformat:0 }}</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">Balance to Pay:</span>
+                <span class="detail-value">₹{{ balance_amount|floatformat:0 }}</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">Total Amount:</span>
+                <span class="detail-value">₹{{ total_price|floatformat:0 }}</span>
+            </div>
+        </div>
+
+        <div class="refund-note">
+            <div class="d-flex">
+                <i class="bi bi-info-circle-fill me-3 fs-4"></i>
+                <div>
+                    <strong>Important Note:</strong>
+                    <p class="mb-0 mt-1">
+                        If the owner does not accept your request within 24 hours, 
+                        the advance amount of <strong>₹{{ advance_paid|floatformat:0 }}</strong> 
+                        will be automatically refunded to your original payment method.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <a href="{% url 'rentals:my_bookings' %}" class="btn-dashboard">
+            <i class="bi bi-calendar-check me-2"></i>Track Your Booking
+        </a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Owner Registration | RentalHub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #f0f9ff 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .register-container {
+            max-width: 700px;
+            width: 100%;
+        }
+        
+        .register-card {
+            background: #ffffff;
+            border-radius: 20px;
+            border: 1px solid #e0f2fe;
+            padding: 2.5rem;
+            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .register-card:hover {
+            box-shadow: 0 25px 50px rgba(37, 99, 235, 0.08);
+            border-color: #93c5fd;
+        }
+        
+        .card-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .card-header h4 {
+            font-weight: 700;
+            font-size: 2rem;
+            color: #2563eb;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .card-header p {
+            color: #475569;
+            font-size: 0.95rem;
+        }
+        
+        .alert-info {
+            background: #eff6ff;
+            border: 1px solid #dbeafe;
+            border-radius: 12px;
+            color: #1e40af;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .alert-info i {
+            font-size: 1.2rem;
+            color: #2563eb;
+        }
+        
+        .alert-danger {
+            background: #fef2f2;
+            border: 1px solid #fee2e2;
+            border-radius: 12px;
+            color: #dc2626;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            color: #334155;
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .form-label i {
+            color: #2563eb;
+            font-size: 1rem;
+        }
+        
+        /* Style for form fields */
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="file"],
+        select,
+        textarea {
+            border: 1px solid #dbeafe;
+            border-radius: 12px;
+            padding: 0.8rem 1rem;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            background: #f8fafc;
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+        
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+            outline: none;
+            background: #ffffff;
+        }
+        
+        /* Password requirements tooltip */
+        .password-requirements {
+            background: #f8fafc;
+            border: 1px solid #e0f2fe;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .password-requirements.show {
+            display: block;
+        }
+        
+        .password-requirements p {
+            color: #2563eb;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .password-requirements ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .password-requirements li {
+            color: #475569;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            line-height: 1.4;
+        }
+        
+        .password-requirements li i {
+            color: #2563eb;
+            font-size: 0.9rem;
+            margin-top: 0.2rem;
+            flex-shrink: 0;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Style for form paragraphs */
+        form p {
+            margin-bottom: 1rem;
+            position: relative;
+        }
+        
+        /* Style for help text */
+        .helptext {
+            color: #64748b;
+            font-size: 0.85rem;
+            display: block;
+            margin-top: -0.3rem;
+            margin-bottom: 0.8rem;
+        }
+        
+        /* Style for error lists */
+        .errorlist {
+            color: #dc2626;
+            font-size: 0.85rem;
+            list-style: none;
+            padding: 0;
+            margin-bottom: 0.3rem;
+        }
+        
+        .btn-register {
+            background: #2563eb;
+            color: white;
+            border: 1px solid #2563eb;
+            padding: 0.9rem;
+            font-weight: 600;
+            font-size: 1rem;
+            border-radius: 12px;
+            width: 100%;
+            transition: all 0.2s ease;
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-register:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
+            color: white;
+        }
+        
+        .login-link {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e0f2fe;
+        }
+        
+        .login-link p {
+            color: #475569;
+            font-size: 0.95rem;
+            margin-bottom: 0;
+        }
+        
+        .login-link a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+        
+        .back-home {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+        
+        .back-home a {
+            color: #64748b;
+            text-decoration: none;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            background: #f8fafc;
+            border: 1px solid #e0f2fe;
+        }
+        
+        .back-home a:hover {
+            color: #2563eb;
+            background: #eff6ff;
+            border-color: #93c5fd;
+        }
+        
+        /* Animation classes */
+        [data-aos] {
+            pointer-events: none;
+        }
+        
+        [data-aos].aos-animate {
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="register-card" data-aos="fade-up">
+            <!-- Header -->
+            <div class="card-header" data-aos="fade-up" data-aos-delay="50">
+                <h4>RentalHub</h4>
+                <p>Register as Item Owner</p>
+            </div>
+            
+            <!-- Info Alert -->
+            <div class="alert-info" data-aos="fade-up" data-aos-delay="80">
+                <i class="bi bi-info-circle"></i>
+                <span>Owners must be verified by admin before accessing the dashboard.</span>
+            </div>
+            
+            <!-- Registration Form -->
+            <form method="POST" enctype="multipart/form-data" id="registerForm" data-aos="fade-up" data-aos-delay="100">
+                {% csrf_token %}
+                
+                <!-- Display form errors -->
+                {% if form.errors %}
+                <div class="alert-danger">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    <strong>Please correct the following errors:</strong>
+                    {{ form.errors }}
+                </div>
+                {% endif %}
+
+                {{ form.as_p }}
+
+                <!-- Password Requirements (Django default messages) -->
+                <div class="password-requirements" id="passwordRequirements">
+                    <p><i class="bi bi-shield-check"></i> Password Requirements:</p>
+                    <ul>
+                        <li><i class="bi bi-dot"></i> Your password can't be too similar to your other personal information.</li>
+                        <li><i class="bi bi-dot"></i> Your password must contain at least 8 characters.</li>
+                        <li><i class="bi bi-dot"></i> Your password can't be a commonly used password.</li>
+                        <li><i class="bi bi-dot"></i> Your password can't be entirely numeric.</li>
+                    </ul>
+                </div>
+
+                <!-- Registration Button -->
+                <div class="d-grid mt-3">
+                    <button type="submit" class="btn-register">
+                        <i class="bi bi-shop"></i>
+                        Submit for Verification
+                    </button>
+                </div>
+            </form>
+            
+            <!-- Login Link -->
+            <div class="login-link" data-aos="fade-up" data-aos-delay="150">
+                <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+            </div>
+            
+            <!-- Back to Home -->
+            <div class="back-home" data-aos="fade-up" data-aos-delay="200">
+                <a href="{% url 'index' %}">
+                    <i class="bi bi-arrow-left"></i>
+                    Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- AOS Animation Library -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 20
+        });
+
+        // Show password requirements only when password field is clicked
+        document.addEventListener('DOMContentLoaded', function() {
+            // Find all password inputs
+            const passwordInputs = document.querySelectorAll('input[type="password"]');
+            const requirementsBox = document.getElementById('passwordRequirements');
+            
+            if (passwordInputs.length > 0 && requirementsBox) {
+                // Show requirements when any password field is focused
+                passwordInputs.forEach(input => {
+                    input.addEventListener('focus', function() {
+                        requirementsBox.classList.add('show');
+                    });
+                    
+                    // Hide when clicking outside
+                    input.addEventListener('blur', function(e) {
+                        // Small delay to allow clicking inside requirements
+                        setTimeout(() => {
+                            if (!requirementsBox.contains(document.activeElement)) {
+                                requirementsBox.classList.remove('show');
+                            }
+                        }, 200);
+                    });
+                });
+                
+                // Keep requirements visible if clicking inside them
+                requirementsBox.addEventListener('mouseenter', function() {
+                    requirementsBox.classList.add('show');
+                });
+                
+                requirementsBox.addEventListener('mouseleave', function() {
+                    // Don't hide if a password input is still focused
+                    const anyPasswordFocused = Array.from(passwordInputs).some(input => 
+                        document.activeElement === input
+                    );
+                    if (!anyPasswordFocused) {
+                        requirementsBox.classList.remove('show');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

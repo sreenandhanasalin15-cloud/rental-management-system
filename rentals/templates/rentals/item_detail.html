@@ -1,0 +1,1389 @@
+{% load static %}
+{% load custom_filters %} 
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ item.name }} | RentalHub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #f0f9ff 100%);
+            color: #334155;
+            min-height: 100vh;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(37, 99, 235, 0.05);
+            padding: 0.8rem 0;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.6rem;
+            letter-spacing: -0.5px;
+            color: #2563eb !important;
+        }
+
+        .nav-link {
+            color: #334155 !important;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: #2563eb !important;
+        }
+
+        .btn-logout {
+            background: transparent;
+            color: #2563eb;
+            border: 1px solid #dbeafe;
+            border-radius: 8px;
+            padding: 0.4rem 1rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .btn-logout:hover {
+            background: #eff6ff;
+            border-color: #2563eb;
+            transform: translateY(-1px);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+        }
+
+        /* Item Detail Card */
+        .item-detail-card {
+            background: #ffffff;
+            border-radius: 24px;
+            border: 1px solid #e0f2fe;
+            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.05);
+            overflow: hidden;
+            margin-top: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .item-detail-card:hover {
+            box-shadow: 0 25px 50px rgba(37, 99, 235, 0.08);
+            border-color: #93c5fd;
+        }
+
+        /* Image Gallery */
+        .image-gallery {
+            height: 500px;
+            background: #f8fafc;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .main-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            color: #64748b;
+        }
+
+        .image-placeholder i {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Item Info Section */
+        .item-info-section {
+            padding: 2.5rem;
+        }
+
+        .item-category {
+            display: inline-block;
+            background: #eff6ff;
+            color: #2563eb;
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            border: 1px solid #dbeafe;
+        }
+
+        .item-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .item-owner {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #64748b;
+            margin-bottom: 1.5rem;
+        }
+
+        .item-owner i {
+            color: #2563eb;
+        }
+
+        .owner-avatar {
+            width: 32px;
+            height: 32px;
+            background: #eff6ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2563eb;
+        }
+
+        /* Rating Stars */
+        .rating-stars {
+            color: #fbbf24;
+            font-size: 1.1rem;
+            margin-right: 0.5rem;
+        }
+        
+        .rating-count {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        /* Price Section */
+        .price-section {
+            background: #f8fafc;
+            border: 1px solid #e0f2fe;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .price-label {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .price-value {
+            color: #2563eb;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .price-value small {
+            font-size: 1rem;
+            font-weight: 400;
+            color: #64748b;
+        }
+
+        .security-deposit {
+            margin-top: 0.5rem;
+            color: #64748b;
+        }
+
+        .security-deposit strong {
+            color: #0f172a;
+        }
+
+        .availability-badge {
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .available {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .unavailable {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Status Messages */
+        .status-message {
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            border: 1px solid #ffe8a1;
+            color: #856404;
+        }
+
+        .status-active {
+            background: #cce5ff;
+            border: 1px solid #b8daff;
+            color: #004085;
+        }
+
+        .status-overdue {
+            background: #fff3f3;
+            border: 2px solid #dc3545;
+            color: #721c24;
+            animation: pulse 2s infinite;
+            position: relative;
+        }
+
+        @keyframes pulse {
+            0% {
+                border-color: #dc3545;
+                box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.4);
+            }
+            70% {
+                border-color: #dc3545;
+                box-shadow: 0 0 0 10px rgba(220, 53, 69, 0);
+            }
+            100% {
+                border-color: #dc3545;
+                box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
+            }
+        }
+
+        .status-returned {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .status-other {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        /* Countdown Timer */
+        .countdown-timer {
+            background: #f8fafc;
+            border: 1px solid #e0f2fe;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .timer-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #2563eb;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .timer-text {
+            flex: 1;
+        }
+        
+        .timer-label {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+        
+        .timer-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2563eb;
+        }
+        
+        .timer-value.warning {
+            color: #f59e0b;
+        }
+        
+        .timer-value.danger {
+            color: #ef4444;
+        }
+
+        /* Overdue Calculation */
+        .overdue-calculation {
+            background: #ffffff;
+            border: 1px solid #fcc5c5;
+            border-radius: 12px;
+            padding: 1.2rem;
+            margin-top: 1rem;
+        }
+
+        .overdue-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #dc3545;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .penalty-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px dashed #e9ecef;
+        }
+
+        .penalty-item:last-child {
+            border-bottom: none;
+        }
+
+        .penalty-label {
+            color: #6c757d;
+        }
+
+        .penalty-value {
+            font-weight: 600;
+            color: #dc3545;
+        }
+
+        .total-penalty {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #dc3545;
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 2px solid #dc3545;
+        }
+
+        /* Review Button */
+        .btn-review {
+            background: #10b981;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 1rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            width: 100%;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            margin-top: 1rem;
+        }
+        
+        .btn-review:hover {
+            background: #059669;
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        .btn-penalty {
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 1rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            width: 100%;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-penalty:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        /* Location Info */
+        .location-info {
+            background: #ffffff;
+            border: 1px solid #e0f2fe;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .location-info i {
+            color: #2563eb;
+        }
+
+        /* Booking Form */
+        .booking-form {
+            background: #f8fafc;
+            border: 1px solid #e0f2fe;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .booking-form h4 {
+            color: #0f172a;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #334155;
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-label i {
+            color: #2563eb;
+            font-size: 1rem;
+        }
+
+        .form-control {
+            border: 1px solid #dbeafe;
+            border-radius: 12px;
+            padding: 0.8rem 1rem;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            background: #ffffff;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        .form-control:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+            outline: none;
+        }
+
+        /* Specifications Section */
+        .specs-section {
+            background: #ffffff;
+            border: 1px solid #e0f2fe;
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .specs-section h5 {
+            color: #0f172a;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .spec-item {
+            background: #f8fafc;
+            border: 1px solid #e0f2fe;
+            border-radius: 10px;
+            padding: 0.8rem 1rem;
+        }
+
+        .spec-item strong {
+            color: #2563eb;
+            margin-right: 0.5rem;
+        }
+
+        .spec-item span {
+            color: #475569;
+        }
+
+        /* Reviews Section */
+        .reviews-section {
+            background: #ffffff;
+            border: 1px solid #e0f2fe;
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .review-card {
+            background: #f8fafc;
+            border: 1px solid #e0f2fe;
+            border-radius: 12px;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .reviewer-name {
+            font-weight: 600;
+            color: #0f172a;
+        }
+        
+        .review-date {
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+        
+        .review-stars {
+            color: #fbbf24;
+            margin-bottom: 0.5rem;
+        }
+        
+        .review-text {
+            color: #475569;
+            line-height: 1.6;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn-back {
+            background: transparent;
+            color: #2563eb;
+            border: 1px solid #dbeafe;
+            border-radius: 12px;
+            padding: 0.8rem 1.5rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-back:hover {
+            background: #eff6ff;
+            border-color: #2563eb;
+            transform: translateY(-2px);
+        }
+
+        .btn-contact {
+            background: #ffffff;
+            color: #2563eb;
+            border: 1px solid #dbeafe;
+            border-radius: 12px;
+            padding: 0.8rem 1.5rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-contact:hover {
+            background: #eff6ff;
+            border-color: #2563eb;
+            transform: translateY(-2px);
+        }
+
+        /* Similar Items */
+        .similar-items {
+            margin: 3rem 0;
+        }
+
+        .similar-items h4 {
+            color: #0f172a;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .similar-item-card {
+            background: #ffffff;
+            border: 1px solid #e0f2fe;
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            height: 100%;
+        }
+
+        .similar-item-card:hover {
+            transform: translateY(-5px);
+            border-color: #2563eb;
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.08);
+        }
+
+        .similar-item-image {
+            height: 150px;
+            object-fit: cover;
+            width: 100%;
+        }
+
+        .similar-item-body {
+            padding: 1rem;
+        }
+
+        .similar-item-title {
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 0.3rem;
+        }
+
+        .similar-item-price {
+            color: #2563eb;
+            font-weight: 600;
+        }
+
+        /* Alert */
+        .alert {
+            border-radius: 12px;
+            border: 1px solid #e0f2fe;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .alert-danger {
+            background: #fee9e7;
+            border-color: #fcc5c5;
+            color: #b91c1c;
+        }
+
+        .alert-info {
+            background: #cce5ff;
+            border-color: #b8daff;
+            color: #004085;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            border-color: #ffe8a1;
+            color: #856404;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .image-gallery {
+                height: 300px;
+            }
+            
+            .item-info-section {
+                padding: 1.5rem;
+            }
+            
+            .item-title {
+                font-size: 1.8rem;
+            }
+            
+            .price-value {
+                font-size: 2rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'rentals:user_dashboard' %}">RentalHub</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item me-3">
+                    <a class="nav-link" href="{% url 'rentals:notifications' %}">
+                        <i class="bi bi-bell"></i>
+                        {% if unread_notifications > 0 %}
+                        <span class="badge bg-danger rounded-pill">{{ unread_notifications }}</span>
+                        {% endif %}
+                    </a>
+                </li>
+                <li class="nav-item me-3">
+                    <a class="nav-link" href="{% url 'rentals:my_bookings' %}">
+                        <i class="bi bi-calendar-check me-1"></i>My Bookings
+                    </a>
+                </li>
+                <li class="nav-item me-3">
+                    <span class="nav-link text-dark">
+                        <i class="bi bi-person-circle me-1"></i>{{ request.user.username }}
+                    </span>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'logout' %}" class="btn-logout">
+                        <i class="bi bi-box-arrow-right me-1"></i>Logout
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-5 pt-4">
+
+    <!-- Back Button -->
+    <a href="javascript:history.back()" class="btn-back mb-3" data-aos="fade-up">
+        <i class="bi bi-arrow-left"></i> Back
+    </a>
+
+    <!-- Main Item Detail Card -->
+    <div class="item-detail-card" data-aos="fade-up">
+        <div class="row g-0">
+            <!-- Image Section -->
+            <div class="col-lg-6">
+                <div class="image-gallery">
+                    {% if item.image %}
+                    <img src="{{ item.image.url }}" class="main-image" alt="{{ item.name }}">
+                    {% else %}
+                    <div class="image-placeholder">
+                        <div class="text-center">
+                            <i class="bi bi-image"></i>
+                            <p class="mt-2">No Image Available</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Info Section -->
+            <div class="col-lg-6">
+                <div class="item-info-section">
+                    <!-- Category -->
+                    <span class="item-category">
+                        <i class="bi bi-tag me-1"></i>{{ item.get_category_display }}
+                    </span>
+
+                    <!-- Title -->
+                    <h1 class="item-title">{{ item.name }}</h1>
+
+                    <!-- Owner Info -->
+                    <div class="item-owner">
+                        <div class="owner-avatar">
+                            <i class="bi bi-person"></i>
+                        </div>
+                        <span>Listed by <strong>{{ item.owner.username }}</strong></span>
+                    </div>
+
+                    <!-- Rating -->
+                    {% if item.total_ratings > 0 %}
+                    <div class="mb-3">
+                        <span class="rating-stars">
+                            {% for i in "12345"|make_list %}
+                                {% if forloop.counter <= item.average_rating|floatformat:0 %}
+                                    <i class="bi bi-star-fill"></i>
+                                {% else %}
+                                    <i class="bi bi-star"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </span>
+                        <span class="rating-count">{{ item.average_rating|floatformat:1 }} ({{ item.total_ratings }} reviews)</span>
+                    </div>
+                    {% endif %}
+
+                    <!-- CHECK FOR USER'S BOOKING -->
+                    {% with user_booking=user_bookings|first %}
+                    
+                    <!-- CASE 1: User has an active booking for this item -->
+                    {% if user_booking %}
+                        {% if user_booking.status == 'PENDING' %}
+                        <div class="status-message status-pending">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="bi bi-clock-history fs-1 me-3"></i>
+                                <div>
+                                    <h5 class="mb-1">Your Booking Request is Pending</h5>
+                                    <p class="mb-0">Waiting for owner's approval. You'll be notified once they respond.</p>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-6">
+                                    <strong>Start Date:</strong> {{ user_booking.start_date|date:"M d, Y" }}
+                                </div>
+                                <div class="col-6">
+                                    <strong>End Date:</strong> {{ user_booking.end_date|date:"M d, Y" }}
+                                </div>
+                            </div>
+                            <a href="{% url 'rentals:booking_pending' user_booking.id %}" class="btn btn-warning w-100 mt-3">
+                                <i class="bi bi-clock-history me-2"></i>Track Your Request
+                            </a>
+                        </div>
+
+                        {% elif user_booking.status == 'APPROVED' %}
+                        <div class="status-message status-pending" style="background: #dbeafe; border-color: #bfdbfe; color: #1e40af;">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="bi bi-check-circle fs-1 me-3"></i>
+                                <div>
+                                    <h5 class="mb-1">Booking Approved!</h5>
+                                    <p class="mb-0">Please complete the remaining payment to confirm your rental.</p>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-6">
+                                    <strong>Advance Paid:</strong> ₹{{ user_booking.advance_paid|floatformat:0 }}
+                                </div>
+                                <div class="col-6">
+                                    <strong>Balance Due:</strong> <span class="text-danger">₹{{ user_booking.balance_amount|floatformat:0 }}</span>
+                                </div>
+                            </div>
+                            <a href="{% url 'rentals:process_balance_payment' user_booking.id %}" class="btn btn-primary w-100 mt-3">
+                                <i class="bi bi-credit-card me-2"></i>Pay Balance Now
+                            </a>
+                        </div>
+
+                        {% elif user_booking.status == 'AGREEMENT_PENDING' %}
+                        <div class="status-message status-pending" style="background: #ede9fe; border-color: #ddd6fe; color: #5b21b6;">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="bi bi-file-text fs-1 me-3"></i>
+                                <div>
+                                    <h5 class="mb-1">Agreement Pending</h5>
+                                    <p class="mb-0">Please review and accept the rental agreement.</p>
+                                </div>
+                            </div>
+                            <a href="{% url 'rentals:agreement_page' user_booking.id %}" class="btn btn-primary w-100 mt-3">
+                                <i class="bi bi-file-text me-2"></i>View Agreement
+                            </a>
+                        </div>
+
+                        {% elif user_booking.status == 'CONFIRMED' %}
+                        <!-- UPDATED: Handle active vs overdue rentals with penalty -->
+                        <div class="status-message {% if user_booking.end_date < now.date %}status-overdue{% else %}status-active{% endif %}">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="bi {% if user_booking.end_date < now.date %}bi-exclamation-triangle-fill{% else %}bi-check-circle-fill{% endif %} fs-1 me-3"></i>
+                                <div>
+                                    {% if user_booking.end_date < now.date %}
+                                        <h5 class="mb-1 text-danger">⚠️ RENTAL OVERDUE!</h5>
+                                        <p class="mb-0">You were supposed to return this item on <strong>{{ user_booking.end_date|date:"M d, Y" }}</strong>.</p>
+                                    {% else %}
+                                        <h5 class="mb-1">You are currently renting this item</h5>
+                                        <p class="mb-0">Your rental period is active.</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <!-- Countdown Timer (only show for active rentals) -->
+                            {% if user_booking.end_date >= now.date %}
+                            <div class="countdown-timer">
+                                <div class="timer-icon">
+                                    <i class="bi bi-clock"></i>
+                                </div>
+                                <div class="timer-text">
+                                    <div class="timer-label">Time until return</div>
+                                    {% with days_left=user_booking.end_date|timeuntil:now %}
+                                        {% if '0 minutes' in days_left %}
+                                            <div class="timer-value danger">Due Today!</div>
+                                        {% elif 'day' not in days_left %}
+                                            <div class="timer-value warning">{{ days_left }} left</div>
+                                        {% else %}
+                                            <div class="timer-value">{{ days_left }} left</div>
+                                        {% endif %}
+                                    {% endwith %}
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            <div class="row mt-3">
+                                <div class="col-6">
+                                    <strong>Start:</strong> {{ user_booking.start_date|date:"M d, Y" }}
+                                </div>
+                                <div class="col-6">
+                                    <strong>End:</strong> {{ user_booking.end_date|date:"M d, Y" }}
+                                </div>
+                            </div>
+
+                            <!-- Overdue Penalty Calculation -->
+                            {% if user_booking.end_date < now.date %}
+                                {% with days_overdue=now.date|timeuntil:user_booking.end_date %}
+                                <div class="overdue-calculation">
+                                    <div class="overdue-header">
+                                        <i class="bi bi-exclamation-triangle-fill"></i>
+                                        <span>Late Return Penalty</span>
+                                    </div>
+                                    
+                                    {% comment %} Calculate days overdue {% endcomment %}
+                                    {% with days_diff=now.date|timeuntil:user_booking.end_date %}
+                                        {% if 'day' in days_diff %}
+                                            {% with days=days_diff|slice:":1" %}
+                                                {% if days == 'a' or days == '1' %}
+                                                    {% with days_count=1 %}
+                                                        {% with penalty_per_day=item.price_per_day|add:"0" %}
+                                                            {% with total_penalty=penalty_per_day %}
+                                                            <div class="penalty-item">
+                                                                <span class="penalty-label">Days Overdue:</span>
+                                                                <span class="penalty-value">1 day</span>
+                                                            </div>
+                                                            <div class="penalty-item">
+                                                                <span class="penalty-label">Penalty Rate:</span>
+                                                                <span class="penalty-value">100% of daily rate</span>
+                                                            </div>
+                                                            <div class="penalty-item">
+                                                                <span class="penalty-label">Daily Rate:</span>
+                                                                <span class="penalty-value">₹{{ item.price_per_day|floatformat:0 }}</span>
+                                                            </div>
+                                                            <div class="total-penalty">
+                                                                Total Penalty: ₹{{ total_penalty|floatformat:0 }}
+                                                            </div>
+                                                            {% endwith %}
+                                                        {% endwith %}
+                                                    {% endwith %}
+                                                {% else %}
+                                                    {% with days_count=days_diff|cut:" days" %}
+                                                        {% with penalty_per_day=item.price_per_day %}
+                                                            {% with total_penalty=penalty_per_day|add:days_count %}
+                                                            <div class="penalty-item">
+                                                                <span class="penalty-label">Days Overdue:</span>
+                                                                <span class="penalty-value">{{ days_count }} days</span>
+                                                            </div>
+                                                            <div class="penalty-item">
+                                                                <span class="penalty-label">Penalty Rate:</span>
+                                                                <span class="penalty-value">100% of daily rate</span>
+                                                            </div>
+                                                            <div class="penalty-item">
+                                                                <span class="penalty-label">Daily Rate:</span>
+                                                                <span class="penalty-value">₹{{ item.price_per_day|floatformat:0 }}</span>
+                                                            </div>
+                                                            <div class="total-penalty">
+                                                                Total Penalty: ₹{{ total_penalty|floatformat:0 }}
+                                                            </div>
+                                                            {% endwith %}
+                                                        {% endwith %}
+                                                    {% endwith %}
+                                                {% endif %}
+                                            {% endwith %}
+                                        {% else %}
+                                            <!-- Less than a day overdue -->
+                                            <div class="penalty-item">
+                                                <span class="penalty-label">Hours Overdue:</span>
+                                                <span class="penalty-value">{{ days_diff }}</span>
+                                            </div>
+                                            <div class="penalty-item">
+                                                <span class="penalty-label">Penalty Rate:</span>
+                                                <span class="penalty-value">50% of daily rate</span>
+                                            </div>
+                                            <div class="penalty-item">
+                                                <span class="penalty-label">Daily Rate:</span>
+                                                <span class="penalty-value">₹{{ item.price_per_day|floatformat:0 }}</span>
+                                            </div>
+                                            <div class="total-penalty">
+                                                Total Penalty: ₹{{ item.price_per_day|divide:2|floatformat:0 }}
+                                            </div>
+                                        {% endif %}
+                                    {% endwith %}
+
+                                    <a href="{% url 'rentals:pay_late_fee' user_booking.id %}" class="btn-penalty mt-3">
+                                        <i class="bi bi-credit-card me-2"></i>Pay Penalty & Return Item
+                                    </a>
+                                    
+                                    <div class="alert alert-warning mt-3 mb-0">
+                                        <i class="bi bi-info-circle-fill me-2"></i>
+                                        <small>Item will be marked as returned only after penalty payment.</small>
+                                    </div>
+                                </div>
+                                {% endwith %}
+                            {% else %}
+                                <!-- Active rental - Show return reminder -->
+                                <div class="alert alert-info mt-3 mb-0">
+                                    <i class="bi bi-info-circle-fill me-2"></i>
+                                    <strong>Please return the item by {{ user_booking.end_date|date:"M d, Y" }}.</strong><br>
+                                    <small>Late returns will incur a penalty of 100% of daily rate per day.</small>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        {% elif user_booking.status == 'RETURNED' %}
+                        <div class="status-message status-returned">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="bi bi-check-circle-fill fs-1 me-3"></i>
+                                <div>
+                                    <h5 class="mb-1">Item Returned Successfully</h5>
+                                    <p class="mb-0">Thank you for returning the item.</p>
+                                </div>
+                            </div>
+                            
+                            {% if not user_booking.review_submitted %}
+                            <a href="{% url 'rentals:submit_review' user_booking.id %}" class="btn-review">
+                                <i class="bi bi-star me-2"></i>Write a Review
+                            </a>
+                            {% else %}
+                            <div class="alert alert-success mt-3 mb-0">
+                                <i class="bi bi-check-circle-fill me-2"></i>
+                                Thank you for your review!
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        {% elif user_booking.status == 'COMPLETED' and not user_booking.review_submitted %}
+                        <div class="status-message status-returned">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="bi bi-star fs-1 me-3"></i>
+                                <div>
+                                    <h5 class="mb-1">How was your experience?</h5>
+                                    <p class="mb-0">Share your feedback with the owner.</p>
+                                </div>
+                            </div>
+                            <a href="{% url 'rentals:submit_review' user_booking.id %}" class="btn-review">
+                                <i class="bi bi-star me-2"></i>Write a Review
+                            </a>
+                        </div>
+                        {% endif %}
+
+                    <!-- CASE 2: No booking by current user, but item has other bookings -->
+                    {% else %}
+                        {% if active_bookings %}
+                            {% for booking in active_bookings %}
+                            <div class="status-message status-other mb-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-calendar-x fs-1 me-3"></i>
+                                    <div>
+                                        <h5 class="mb-1">Currently Unavailable</h5>
+                                        <p class="mb-0">This item is already rented from {{ booking.start_date|date:"M d" }} to {{ booking.end_date|date:"M d, Y" }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% elif pending_bookings %}
+                            <div class="status-message status-pending">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-clock-history fs-1 me-3"></i>
+                                    <div>
+                                        <h5 class="mb-1">Booking Request Pending</h5>
+                                        <p class="mb-0">Another user has requested this item. Waiting for owner's response.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                    
+                    {% endwith %}
+
+                    <!-- Price Section (always visible) -->
+                    <div class="price-section">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="price-label">Price per day</div>
+                                <div class="price-value">
+                                    ₹{{ item.price_per_day|floatformat:0 }} <small>/ day</small>
+                                </div>
+                            </div>
+                            <span class="availability-badge {% if item.is_available %}available{% else %}unavailable{% endif %}">
+                                {% if item.is_available %}
+                                <i class="bi bi-check-circle me-1"></i>Available
+                                {% else %}
+                                <i class="bi bi-x-circle me-1"></i>Currently Unavailable
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="security-deposit">
+                            <i class="bi bi-shield-check me-1"></i>
+                            Security Deposit: <strong>₹{{ item.security_deposit|default:"500"|floatformat:0 }}</strong>
+                            <small class="text-muted d-block">Payable at pickup (refundable)</small>
+                        </div>
+                        <div class="mt-2 text-danger">
+                            <small><i class="bi bi-exclamation-triangle me-1"></i>Late return penalty: 100% of daily rate per day</small>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="mb-4">
+                        <h6 class="fw-bold mb-2">Description</h6>
+                        <p class="text-muted">{{ item.description|default:"No description provided." }}</p>
+                    </div>
+
+                    <!-- Location (if available) -->
+                    {% if item.location_name %}
+                    <div class="location-info">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-geo-alt-fill me-2 fs-5"></i>
+                            <div>
+                                <strong>Pickup Location:</strong><br>
+                                {{ item.location_name }}
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Quantity Info -->
+                    <div class="d-flex align-items-center gap-4 mb-3">
+                        <div>
+                            <i class="bi bi-box me-1"></i>
+                            <strong>Available Quantity:</strong> {{ item.quantity }}
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="action-buttons">
+                        <a href="mailto:{{ item.owner.email }}" class="btn-contact">
+                            <i class="bi bi-envelope me-2"></i>Contact Owner
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Section (only show if available AND user has no active booking) -->
+    {% if item.is_available and not user_bookings %}
+    <div class="booking-form" data-aos="fade-up" data-aos-delay="100">
+        <h4><i class="bi bi-calendar-check me-2"></i>Book This Item</h4>
+        
+        <form method="POST" action="{% url 'rentals:book_item' item.id %}" id="bookingForm">
+            {% csrf_token %}
+
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="form-label">
+                        <i class="bi bi-calendar-plus"></i> Start Date
+                    </label>
+                    <input type="date" name="start_date" id="startDate" class="form-control" min="{{ min_date }}" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">
+                        <i class="bi bi-calendar-minus"></i> End Date
+                    </label>
+                    <input type="date" name="end_date" id="endDate" class="form-control" min="{{ min_date }}" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">
+                        <i class="bi bi-box"></i> Quantity
+                    </label>
+                    <input type="number" name="quantity" id="quantity"
+                           class="form-control"
+                           value="1"
+                           min="1"
+                           max="{{ item.quantity }}">
+                </div>
+            </div>
+
+            <!-- Price Preview -->
+            <div id="pricePreview" class="alert alert-info mt-3" style="display: none;">
+                <!-- Will be populated by JavaScript -->
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 mt-3" id="submitBtn" disabled>
+                <i class="bi bi-send me-2"></i>Send Booking Request
+            </button>
+        </form>
+    </div>
+    {% endif %}
+
+    <!-- Specifications Section -->
+    {% if item.specifications %}
+    <div class="specs-section" data-aos="fade-up" data-aos-delay="150">
+        <h5><i class="bi bi-gear me-2"></i>Specifications</h5>
+        <div class="specs-grid">
+            {% for key, value in item.specifications.items %}
+            <div class="spec-item">
+                <strong>{{ key }}:</strong> <span>{{ value }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Reviews Section -->
+    {% if reviews %}
+    <div class="reviews-section" data-aos="fade-up" data-aos-delay="200">
+        <h5><i class="bi bi-star me-2"></i>Reviews ({{ item.total_ratings }})</h5>
+        {% for review in reviews %}
+        <div class="review-card">
+            <div class="review-header">
+                <span class="reviewer-name">{{ review.user.username }}</span>
+                <span class="review-date">{{ review.created_at|date:"M d, Y" }}</span>
+            </div>
+            <div class="review-stars">
+                {% for i in "12345"|make_list %}
+                    {% if forloop.counter <= review.stars %}
+                        <i class="bi bi-star-fill"></i>
+                    {% else %}
+                        <i class="bi bi-star"></i>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% if review.review %}
+            <p class="review-text">{{ review.review }}</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Similar Items Section -->
+    {% if similar_items %}
+    <div class="similar-items" data-aos="fade-up" data-aos-delay="250">
+        <h4><i class="bi bi-grid me-2"></i>Similar Items You Might Like</h4>
+        <div class="row">
+            {% for similar in similar_items %}
+            <div class="col-md-3 col-6 mb-3">
+                <div class="similar-item-card" onclick="window.location.href='{% url 'rentals:item_detail' similar.id %}'">
+                    {% if similar.image %}
+                    <img src="{{ similar.image.url }}" class="similar-item-image" alt="{{ similar.name }}">
+                    {% else %}
+                    <div class="similar-item-image bg-light d-flex align-items-center justify-content-center">
+                        <i class="bi bi-image text-muted fs-1"></i>
+                    </div>
+                    {% endif %}
+                    <div class="similar-item-body">
+                        <h6 class="similar-item-title">{{ similar.name|truncatechars:20 }}</h6>
+                        <div class="similar-item-price">₹{{ similar.price_per_day }}/day</div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- AOS Animation Library -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+<!-- Booking Script -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    AOS.init({
+        duration: 600,
+        once: true,
+        offset: 20
+    });
+
+    const startInput = document.getElementById("startDate");
+    const endInput = document.getElementById("endDate");
+    const quantityInput = document.getElementById("quantity");
+    
+    if (startInput && endInput) {
+        const pricePerDay = {{ item.price_per_day }};
+        const securityDeposit = {{ item.security_deposit|default:"500" }};
+        const previewBox = document.getElementById("pricePreview");
+        const submitBtn = document.getElementById("submitBtn");
+
+        // Minimum 2 days from today
+        const today = new Date();
+        const minDate = new Date(today);
+        minDate.setDate(today.getDate() + 2);
+        const minStr = minDate.toISOString().split("T")[0];
+
+        startInput.min = minStr;
+        endInput.min = minStr;
+
+        function calculate() {
+            const startVal = startInput.value;
+            const endVal = endInput.value;
+            const qty = parseInt(quantityInput.value) || 1;
+
+            if (!startVal || !endVal) {
+                previewBox.style.display = "none";
+                submitBtn.disabled = true;
+                return;
+            }
+
+            const start = new Date(startVal);
+            const end = new Date(endVal);
+
+            if (end < start) {
+                previewBox.style.display = "none";
+                submitBtn.disabled = true;
+                return;
+            }
+
+            const diffTime = Math.abs(end - start);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            const rentalTotal = diffDays * pricePerDay * qty;
+            const advanceAmount = Math.round(rentalTotal * 0.3);
+            const balanceAtPickup = rentalTotal - advanceAmount;
+            const totalAtPickup = balanceAtPickup + securityDeposit;
+
+            previewBox.innerHTML = `
+                <div class="mb-2"><strong>Rental Summary:</strong></div>
+                <div class="d-flex justify-content-between">
+                    <span>Days:</span>
+                    <span>${diffDays} days</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span>Quantity:</span>
+                    <span>${qty}</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span>Rental Total:</span>
+                    <span>₹${rentalTotal.toFixed(0)}</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span>Advance (30%):</span>
+                    <span>₹${advanceAmount.toFixed(0)}</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span>Balance at Pickup:</span>
+                    <span>₹${balanceAtPickup.toFixed(0)}</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span>Security Deposit:</span>
+                    <span>₹${securityDeposit.toFixed(0)}</span>
+                </div>
+                <hr>
+                <div class="d-flex justify-content-between fw-bold">
+                    <span>Total at Pickup:</span>
+                    <span>₹${totalAtPickup.toFixed(0)}</span>
+                </div>
+            `;
+            previewBox.style.display = "block";
+            submitBtn.disabled = false;
+        }
+
+        startInput.addEventListener("change", function() {
+            endInput.min = this.value;
+            calculate();
+        });
+
+        endInput.addEventListener("change", calculate);
+        quantityInput.addEventListener("input", calculate);
+    }
+});
+</script>
+
+</body>
+</html>

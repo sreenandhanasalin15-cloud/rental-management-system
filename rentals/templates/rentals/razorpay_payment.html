@@ -1,0 +1,258 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Complete Payment | RentHive</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #f0f9ff 100%);
+            color: #334155;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .payment-container {
+            max-width: 600px;
+            margin: 50px auto;
+        }
+
+        .payment-card {
+            background: #ffffff;
+            border-radius: 24px;
+            border: 1px solid #e0f2fe;
+            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.05);
+            padding: 2.5rem;
+        }
+
+        h2 {
+            color: #0f172a;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .item-summary {
+            background: #f8fafc;
+            border: 1px solid #e0f2fe;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #e0f2fe;
+        }
+
+        .price-row:last-child {
+            border-bottom: none;
+        }
+
+        .price-label {
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .price-value {
+            color: #2563eb;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .advance-amount {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2563eb;
+        }
+
+        .btn-pay {
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 14px;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            width: 100%;
+            transition: all 0.2s ease;
+            margin: 1rem 0;
+        }
+
+        .btn-pay:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-cancel {
+            background: transparent;
+            color: #64748b;
+            border: 1px solid #e0f2fe;
+            border-radius: 14px;
+            padding: 0.8rem 2rem;
+            font-weight: 500;
+            width: 100%;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-cancel:hover {
+            background: #f8fafc;
+            color: #2563eb;
+            border-color: #2563eb;
+        }
+
+        .razorpay-logo {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .razorpay-logo img {
+            height: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-container">
+        <div class="payment-card">
+            <h2 class="text-center">Complete Payment</h2>
+            <p class="text-muted text-center">Pay the advance amount to confirm your booking</p>
+
+            <!-- Item Summary -->
+            <div class="item-summary">
+                <h5 class="mb-3">{{ item.name }}</h5>
+                
+                <div class="price-row">
+                    <span class="price-label">Booking Dates:</span>
+                    <span class="price-value">{{ booking.start_date }} to {{ booking.end_date }}</span>
+                </div>
+                
+                <div class="price-row">
+                    <span class="price-label">Duration:</span>
+                    <span class="price-value">{{ booking.days }} days</span>
+                </div>
+                
+                <div class="price-row">
+                    <span class="price-label">Quantity:</span>
+                    <span class="price-value">{{ booking.quantity }}</span>
+                </div>
+                
+                <div class="price-row">
+                    <span class="price-label">Total Amount:</span>
+                    <span class="price-value">₹{{ total_amount|floatformat:0 }}</span>
+                </div>
+                
+                <div class="price-row">
+                    <span class="price-label fw-bold">Advance (30%):</span>
+                    <span class="advance-amount">₹{{ advance_amount|floatformat:0 }}</span>
+                </div>
+            </div>
+
+            <!-- Razorpay Payment Button -->
+            <div class="razorpay-logo">
+                <img src="https://razorpay.com/assets/razorpay-logo.svg" alt="Razorpay">
+            </div>
+            
+            <button id="rzp-button" class="btn-pay">
+                <i class="bi bi-lock me-2"></i>Pay ₹{{ advance_amount|floatformat:0 }} with Razorpay
+            </button>
+            
+            <a href="{% url 'rentals:item_detail' item.id %}" class="btn-cancel">
+                <i class="bi bi-x-lg me-2"></i>Cancel
+            </a>
+        </div>
+    </div>
+
+    <!-- Razorpay Checkout JS -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        var options = {
+            "key": "{{ razorpay_key_id }}",
+            "amount": "{{ amount_in_paise }}",
+            "currency": "{{ currency }}",
+            "name": "RentHive",
+            "description": "Advance payment for {{ item.name }}",
+            "image": "https://your-logo-url.com/logo.png",
+            "order_id": "{{ razorpay_order_id }}",
+            "handler": function (response) {
+                // Create a form to submit payment response
+                var form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '{{ callback_url }}';
+                
+                var csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                
+                var csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = 'csrfmiddlewaretoken';
+                csrfInput.value = csrfToken;
+                form.appendChild(csrfInput);
+                
+                var paymentId = document.createElement('input');
+                paymentId.type = 'hidden';
+                paymentId.name = 'razorpay_payment_id';
+                paymentId.value = response.razorpay_payment_id;
+                form.appendChild(paymentId);
+                
+                var orderId = document.createElement('input');
+                orderId.type = 'hidden';
+                orderId.name = 'razorpay_order_id';
+                orderId.value = response.razorpay_order_id;
+                form.appendChild(orderId);
+                
+                var signature = document.createElement('input');
+                signature.type = 'hidden';
+                signature.name = 'razorpay_signature';
+                signature.value = response.razorpay_signature;
+                form.appendChild(signature);
+                
+                document.body.appendChild(form);
+                form.submit();
+            },
+            "prefill": {
+                "name": "{{ request.user.get_full_name|default:request.user.username }}",
+                "email": "{{ request.user.email }}",
+                "contact": ""
+            },
+            "theme": {
+                "color": "#2563eb"
+            },
+            "modal": {
+                "ondismiss": function() {
+                    console.log("Payment modal closed");
+                }
+            }
+        };
+        
+        var rzp = new Razorpay(options);
+        
+        document.getElementById('rzp-button').onclick = function(e) {
+            rzp.open();
+            e.preventDefault();
+        };
+    </script>
+    
+    <!-- CSRF Token for form submission -->
+    {% csrf_token %}
+</body>
+</html>

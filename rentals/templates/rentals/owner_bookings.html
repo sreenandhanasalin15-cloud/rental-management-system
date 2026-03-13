@@ -1,0 +1,740 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Booking Requests | RentHive</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #f0f9ff 100%);
+            color: #334155;
+            min-height: 100vh;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(37, 99, 235, 0.05);
+            padding: 0.8rem 0;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.6rem;
+            letter-spacing: -0.5px;
+            color: #2563eb !important;
+        }
+
+        .nav-link {
+            color: #334155 !important;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: #2563eb !important;
+        }
+
+        .btn-logout {
+            background: transparent;
+            color: #2563eb;
+            border: 1px solid #dbeafe;
+            border-radius: 8px;
+            padding: 0.4rem 1rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .btn-logout:hover {
+            background: #eff6ff;
+            border-color: #2563eb;
+            transform: translateY(-1px);
+        }
+
+        /* Page Header */
+        .page-header {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid #e0f2fe;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.03);
+            margin-top: 100px;
+        }
+
+        .page-header h2 {
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            color: #475569;
+            font-size: 1rem;
+            margin-bottom: 0;
+        }
+
+        /* Filter Buttons */
+        .filter-section {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid #e0f2fe;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-filter {
+            background: transparent;
+            color: #475569;
+            border: 1px solid #dbeafe;
+            border-radius: 8px;
+            padding: 0.5rem 1.2rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-filter:hover {
+            background: #eff6ff;
+            border-color: #2563eb;
+            color: #2563eb;
+        }
+
+        .btn-filter.active {
+            background: #2563eb;
+            border-color: #2563eb;
+            color: white;
+        }
+
+        /* Stats Summary */
+        .stats-summary {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .stat-summary-item {
+            background: #ffffff;
+            border: 1px solid #e0f2fe;
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex: 1;
+            min-width: 150px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .stat-summary-item:hover {
+            transform: translateY(-2px);
+            border-color: #2563eb;
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.1);
+        }
+
+        .stat-summary-icon {
+            width: 48px;
+            height: 48px;
+            background: #eff6ff;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2563eb;
+            font-size: 1.5rem;
+        }
+
+        .stat-summary-info h4 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 0.2rem;
+        }
+
+        .stat-summary-info p {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 0;
+        }
+
+        /* Table */
+        .table-container {
+            background: #ffffff;
+            border: 1px solid #e0f2fe;
+            border-radius: 20px;
+            padding: 1.5rem;
+            overflow-x: auto;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .table th {
+            background: #f8fafc;
+            color: #475569;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 1rem;
+            border-bottom: 2px solid #e0f2fe;
+        }
+
+        .table td {
+            padding: 1rem;
+            color: #334155;
+            border-bottom: 1px solid #e0f2fe;
+            vertical-align: middle;
+        }
+
+        .table tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffe8a1;
+        }
+
+        .status-approved {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-agreement {
+            background: #cce5ff;
+            color: #004085;
+            border: 1px solid #b8daff;
+        }
+
+        .status-confirmed {
+            background: #d1e7dd;
+            color: #0f5132;
+            border: 1px solid #badbcc;
+        }
+
+        .status-returned {
+            background: #e2d9f1;
+            color: #5640a5;
+            border: 1px solid #d2c2f0;
+        }
+
+        .status-completed {
+            background: #d1e7ff;
+            color: #0a58ca;
+            border: 1px solid #b8daff;
+        }
+
+        .status-rejected {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status-cancelled {
+            background: #e2e3e5;
+            color: #383d41;
+            border: 1px solid #d6d8db;
+        }
+
+        .btn-action {
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-decoration: none;
+            margin: 0 0.2rem;
+            display: inline-block;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .btn-approve {
+            background: #d4edda;
+            color: #155724;
+            border-color: #c3e6cb;
+        }
+
+        .btn-approve:hover {
+            background: #c3e6cb;
+            color: #0b5e0b;
+        }
+
+        .btn-reject {
+            background: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
+        }
+
+        .btn-reject:hover {
+            background: #f5c6cb;
+            color: #5e1a1a;
+        }
+
+        .btn-return {
+            background: #e2d9f1;
+            color: #5640a5;
+            border-color: #d2c2f0;
+        }
+
+        .btn-return:hover {
+            background: #d2c2f0;
+            color: #3d2c7a;
+        }
+
+        .btn-complete {
+            background: #d1e7ff;
+            color: #0a58ca;
+            border-color: #b8daff;
+        }
+
+        .btn-complete:hover {
+            background: #b8daff;
+            color: #084298;
+        }
+
+        .btn-view {
+            background: #e2e8f0;
+            color: #334155;
+            border-color: #cbd5e1;
+        }
+
+        .btn-view:hover {
+            background: #cbd5e1;
+            color: #1e293b;
+        }
+
+        .back-btn {
+            background: transparent;
+            color: #2563eb;
+            border: 1px solid #dbeafe;
+            border-radius: 10px;
+            padding: 0.6rem 1.2rem;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+            margin-bottom: 1rem;
+        }
+
+        .back-btn:hover {
+            background: #eff6ff;
+            border-color: #2563eb;
+            transform: translateX(-2px);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: #94a3b8;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h4 {
+            color: #0f172a;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state p {
+            color: #64748b;
+            margin-bottom: 1.5rem;
+        }
+
+        .overdue-badge {
+            background: #dc3545;
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            margin-left: 0.5rem;
+        }
+
+        .fine-amount {
+            color: #dc3545;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'rentals:owner_dashboard' %}">RentHive</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item me-3">
+                    <span class="nav-link text-dark">
+                        <i class="bi bi-person-circle me-1"></i>{{ request.user.username }}
+                    </span>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'logout' %}" class="btn-logout">
+                        <i class="bi bi-box-arrow-right me-1"></i>Logout
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-5 pt-4">
+    <!-- Back Button -->
+    <a href="{% url 'rentals:owner_dashboard' %}" class="back-btn">
+        <i class="bi bi-arrow-left"></i> Back to Dashboard
+    </a>
+
+    <!-- Page Header -->
+    <div class="page-header" data-aos="fade-up">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h2>
+                    {% if current_status == 'PENDING' %}
+                        <i class="bi bi-clock-history me-2 text-warning"></i>Pending Booking Requests
+                    {% elif current_status == 'APPROVED' %}
+                        <i class="bi bi-check-circle me-2 text-success"></i>Approved Bookings
+                    {% elif current_status == 'AGREEMENT_PENDING' %}
+                        <i class="bi bi-file-text me-2 text-info"></i>Agreement Pending
+                    {% elif current_status == 'CONFIRMED' %}
+                        <i class="bi bi-check-circle-fill me-2 text-primary"></i>Active Rentals
+                    {% elif current_status == 'RETURNED' %}
+                        <i class="bi bi-box-arrow-left me-2 text-secondary"></i>Returned Items
+                    {% elif current_status == 'COMPLETED' %}
+                        <i class="bi bi-star-fill me-2 text-warning"></i>Completed Bookings
+                    {% else %}
+                        <i class="bi bi-calendar-check me-2 text-primary"></i>All Booking Requests
+                    {% endif %}
+                </h2>
+                <p class="text-muted mb-0">
+                    Manage and review all booking requests for your items
+                </p>
+            </div>
+            <div class="text-end">
+                <span class="badge bg-light text-dark border p-2">
+                    <i class="bi bi-calendar me-1"></i>{% now "l, F j, Y" %}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Summary (Clickable) -->
+    <div class="stats-summary" data-aos="fade-up" data-aos-delay="50">
+        <div class="stat-summary-item" onclick="window.location.href='{% url 'rentals:owner_bookings' %}?status=PENDING'">
+            <div class="stat-summary-icon">
+                <i class="bi bi-clock-history"></i>
+            </div>
+            <div class="stat-summary-info">
+                <h4>{{ pending_count }}</h4>
+                <p>Pending</p>
+            </div>
+        </div>
+        <div class="stat-summary-item" onclick="window.location.href='{% url 'rentals:owner_bookings' %}?status=APPROVED'">
+            <div class="stat-summary-icon">
+                <i class="bi bi-check-circle"></i>
+            </div>
+            <div class="stat-summary-info">
+                <h4>{{ approved_count }}</h4>
+                <p>Approved</p>
+            </div>
+        </div>
+        <div class="stat-summary-item" onclick="window.location.href='{% url 'rentals:owner_bookings' %}?status=AGREEMENT_PENDING'">
+            <div class="stat-summary-icon">
+                <i class="bi bi-file-text"></i>
+            </div>
+            <div class="stat-summary-info">
+                <h4>{{ agreement_pending_count }}</h4>
+                <p>Agreement Pending</p>
+            </div>
+        </div>
+        <div class="stat-summary-item" onclick="window.location.href='{% url 'rentals:owner_bookings' %}?status=CONFIRMED'">
+            <div class="stat-summary-icon">
+                <i class="bi bi-check-circle-fill"></i>
+            </div>
+            <div class="stat-summary-info">
+                <h4>{{ confirmed_count }}</h4>
+                <p>Active Rentals</p>
+            </div>
+        </div>
+        <div class="stat-summary-item" onclick="window.location.href='{% url 'rentals:owner_bookings' %}?status=RETURNED'">
+            <div class="stat-summary-icon">
+                <i class="bi bi-box-arrow-left"></i>
+            </div>
+            <div class="stat-summary-info">
+                <h4>{{ returned_count }}</h4>
+                <p>Returned</p>
+            </div>
+        </div>
+        <div class="stat-summary-item" onclick="window.location.href='{% url 'rentals:owner_bookings' %}?status=COMPLETED'">
+            <div class="stat-summary-icon">
+                <i class="bi bi-star-fill"></i>
+            </div>
+            <div class="stat-summary-info">
+                <h4>{{ completed_count }}</h4>
+                <p>Completed</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Buttons -->
+    <div class="filter-section" data-aos="fade-up" data-aos-delay="100">
+        <div class="filter-group">
+            <a href="{% url 'rentals:owner_bookings' %}" class="btn-filter {% if not current_status %}active{% endif %}">
+                All ({{ total_count }})
+            </a>
+            <a href="{% url 'rentals:owner_bookings' %}?status=PENDING" class="btn-filter {% if current_status == 'PENDING' %}active{% endif %}">
+                Pending ({{ pending_count }})
+            </a>
+            <a href="{% url 'rentals:owner_bookings' %}?status=APPROVED" class="btn-filter {% if current_status == 'APPROVED' %}active{% endif %}">
+                Approved ({{ approved_count }})
+            </a>
+            <a href="{% url 'rentals:owner_bookings' %}?status=AGREEMENT_PENDING" class="btn-filter {% if current_status == 'AGREEMENT_PENDING' %}active{% endif %}">
+                Agreement ({{ agreement_pending_count }})
+            </a>
+            <a href="{% url 'rentals:owner_bookings' %}?status=CONFIRMED" class="btn-filter {% if current_status == 'CONFIRMED' %}active{% endif %}">
+                Active ({{ confirmed_count }})
+            </a>
+            <a href="{% url 'rentals:owner_bookings' %}?status=RETURNED" class="btn-filter {% if current_status == 'RETURNED' %}active{% endif %}">
+                Returned ({{ returned_count }})
+            </a>
+            <a href="{% url 'rentals:owner_bookings' %}?status=COMPLETED" class="btn-filter {% if current_status == 'COMPLETED' %}active{% endif %}">
+                Completed ({{ completed_count }})
+            </a>
+            <a href="{% url 'rentals:owner_bookings' %}?status=REJECTED" class="btn-filter {% if current_status == 'REJECTED' %}active{% endif %}">
+                Rejected ({{ rejected_count }})
+            </a>
+            <a href="{% url 'rentals:owner_bookings' %}?status=CANCELLED" class="btn-filter {% if current_status == 'CANCELLED' %}active{% endif %}">
+                Cancelled ({{ cancelled_count }})
+            </a>
+        </div>
+    </div>
+
+    <!-- Bookings Table -->
+    <div class="table-container" data-aos="fade-up" data-aos-delay="150">
+        {% if bookings %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Renter</th>
+                    <th>Item</th>
+                    <th>Dates</th>
+                    <th>Qty</th>
+                    <th>Total</th>
+                    <th>Advance</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in bookings %}
+                <tr>
+                    <td>
+                        <strong>{{ booking.user.username }}</strong>
+                        <br>
+                        <small class="text-muted">{{ booking.user.email }}</small>
+                    </td>
+                    <td>{{ booking.item.name }}</td>
+                    <td>
+                        {{ booking.start_date|date:"M d, Y" }}<br>
+                        <small class="text-muted">to {{ booking.end_date|date:"M d, Y" }}</small>
+                        {% if booking.is_overdue %}
+                            <span class="overdue-badge">Overdue</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ booking.quantity|default:"1" }}</td>
+                    <td><strong>₹{{ booking.total_price|floatformat:0 }}</strong></td>
+                    <td>
+                        <span class="text-warning fw-bold">₹{{ booking.advance_paid|default:"0"|floatformat:0 }}</span>
+                    </td>
+                    <td>
+                        <span class="status-badge 
+                            {% if booking.status == 'PENDING' %}status-pending
+                            {% elif booking.status == 'APPROVED' %}status-approved
+                            {% elif booking.status == 'AGREEMENT_PENDING' %}status-agreement
+                            {% elif booking.status == 'CONFIRMED' %}status-confirmed
+                            {% elif booking.status == 'RETURNED' %}status-returned
+                            {% elif booking.status == 'COMPLETED' %}status-completed
+                            {% elif booking.status == 'REJECTED' %}status-rejected
+                            {% elif booking.status == 'CANCELLED' %}status-cancelled
+                            {% endif %}">
+                            {{ booking.status }}
+                        </span>
+                        {% if booking.total_fine %}
+                            <br><small class="fine-amount">Fine: ₹{{ booking.total_fine }}</small>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="d-flex gap-1 flex-wrap">
+                            {% if booking.status == 'PENDING' %}
+                                <a href="{% url 'rentals:approve_booking' booking.id %}" class="btn-action btn-approve" 
+                                   onclick="return confirm('Approve this booking request?')">
+                                    <i class="bi bi-check-lg"></i> Approve
+                                </a>
+                                <a href="{% url 'rentals:reject_booking' booking.id %}" class="btn-action btn-reject" 
+                                   onclick="return confirm('Reject this booking request?')">
+                                    <i class="bi bi-x-lg"></i> Reject
+                                </a>
+                            {% endif %}
+                            
+                            {% if booking.status == 'CONFIRMED' %}
+                                <a href="{% url 'rentals:return_item' booking.id %}" class="btn-action btn-return">
+                                    <i class="bi bi-box-arrow-left"></i> Return
+                                </a>
+                            {% endif %}
+                            
+                            {% if booking.status == 'RETURNED' and not booking.review_submitted %}
+                                <span class="badge bg-warning text-dark">Awaiting Review</span>
+                            {% endif %}
+                            
+                            <!-- View Details Button -->
+                            <button class="btn-action btn-view" data-bs-toggle="modal" 
+                                    data-bs-target="#bookingModal{{ booking.id }}">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                            
+                            <!-- Contact Button -->
+                            <a href="mailto:{{ booking.user.email }}" class="btn-action btn-view">
+                                <i class="bi bi-envelope"></i>
+                            </a>
+                        </div>
+
+                        <!-- Booking Details Modal -->
+                        <div class="modal fade" id="bookingModal{{ booking.id }}" tabindex="-1">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Booking Details #{{ booking.id }}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h6>Renter Information</h6>
+                                                <table class="table table-sm">
+                                                    <tr><th>Name</th><td>{{ booking.user.username }}</td></tr>
+                                                    <tr><th>Email</th><td>{{ booking.user.email }}</td></tr>
+                                                </table>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h6>Item Information</h6>
+                                                <table class="table table-sm">
+                                                    <tr><th>Item</th><td>{{ booking.item.name }}</td></tr>
+                                                    <tr><th>Category</th><td>{{ booking.item.get_category_display }}</td></tr>
+                                                    <tr><th>Price/Day</th><td>₹{{ booking.item.price_per_day }}</td></tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        
+                                        <h6 class="mt-3">Booking Details</h6>
+                                        <table class="table table-bordered">
+                                            <tr><th>Start Date</th><td>{{ booking.start_date|date:"F d, Y" }}</td></tr>
+                                            <tr><th>End Date</th><td>{{ booking.end_date|date:"F d, Y" }}</td></tr>
+                                            <tr><th>Duration</th><td>{{ booking.days }} days</td></tr>
+                                            <tr><th>Quantity</th><td>{{ booking.quantity|default:"1" }}</td></tr>
+                                            <tr><th>Total Price</th><td>₹{{ booking.total_price|floatformat:0 }}</td></tr>
+                                            <tr><th>Advance Paid</th><td>₹{{ booking.advance_paid|floatformat:0 }}</td></tr>
+                                            <tr><th>Balance Due</th><td>₹{{ booking.balance_amount|floatformat:0 }}</td></tr>
+                                            <tr><th>Payment Status</th><td>{{ booking.payment_status }}</td></tr>
+                                            <tr><th>Booking Status</th><td>{{ booking.status }}</td></tr>
+                                            {% if booking.actual_return_date %}
+                                            <tr><th>Actual Return Date</th><td>{{ booking.actual_return_date|date:"F d, Y" }}</td></tr>
+                                            {% endif %}
+                                            {% if booking.late_fee %}
+                                            <tr><th>Late Fee</th><td class="text-danger">₹{{ booking.late_fee }}</td></tr>
+                                            {% endif %}
+                                            {% if booking.damage_reported %}
+                                            <tr><th>Damage Reported</th><td>Yes</td></tr>
+                                            <tr><th>Damage Description</th><td>{{ booking.damage_description }}</td></tr>
+                                            {% endif %}
+                                            <tr><th>Booked on</th><td>{{ booking.created_at|date:"F d, Y H:i" }}</td></tr>
+                                        </table>
+                                        
+                                        {% if booking.review_submitted %}
+                                        <div class="alert alert-info">
+                                            <strong>Review:</strong> {{ booking.review_text|default:"No review text" }} ({{ booking.review_stars }} stars)
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">
+            <i class="bi bi-calendar-x"></i>
+            <h4>No bookings found</h4>
+            <p>There are no booking requests matching your criteria.</p>
+            <a href="{% url 'rentals:owner_dashboard' %}" class="btn btn-primary">
+                <i class="bi bi-arrow-left me-2"></i>Back to Dashboard
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init({
+        duration: 600,
+        once: true,
+        offset: 20
+    });
+</script>
+
+</body>
+</html>

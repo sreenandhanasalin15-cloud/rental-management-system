@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Registration | RentalHub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #f0f9ff 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .register-container {
+            max-width: 500px;
+            width: 100%;
+        }
+        
+        .register-card {
+            background: #ffffff;
+            border-radius: 20px;
+            border: 1px solid #e0f2fe;
+            padding: 2.5rem 2rem;
+            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .register-card:hover {
+            box-shadow: 0 25px 50px rgba(37, 99, 235, 0.08);
+            border-color: #93c5fd;
+        }
+        
+        .card-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .card-header h4 {
+            font-weight: 700;
+            font-size: 2rem;
+            color: #2563eb;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .card-header p {
+            color: #475569;
+            font-size: 0.95rem;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            color: #334155;
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .form-label i {
+            color: #2563eb;
+            font-size: 1rem;
+        }
+        
+        .form-control, .form-select {
+            border: 1px solid #dbeafe;
+            border-radius: 12px;
+            padding: 0.8rem 1rem;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            background: #f8fafc;
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+            outline: none;
+            background: #ffffff;
+        }
+        
+        .form-control.error {
+            border-color: #dc2626;
+            background: #fef2f2;
+        }
+        
+        .form-control.valid {
+            border-color: #10b981;
+            background: #f0fdf4;
+        }
+        
+        .btn-register {
+            background: #2563eb;
+            color: white;
+            border: 1px solid #2563eb;
+            padding: 0.9rem;
+            font-weight: 600;
+            font-size: 1rem;
+            border-radius: 12px;
+            width: 100%;
+            transition: all 0.2s ease;
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-register:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
+        }
+        
+        .btn-register:disabled {
+            background: #94a3b8;
+            border-color: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .login-link {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e0f2fe;
+        }
+        
+        .login-link p {
+            color: #475569;
+            font-size: 0.95rem;
+            margin-bottom: 0;
+        }
+        
+        .login-link a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+        
+        .back-home {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+        
+        .back-home a {
+            color: #64748b;
+            text-decoration: none;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            background: #f8fafc;
+            border: 1px solid #e0f2fe;
+        }
+        
+        .back-home a:hover {
+            color: #2563eb;
+            background: #eff6ff;
+            border-color: #93c5fd;
+        }
+        
+        .error-message {
+            background: #fef2f2;
+            border: 1px solid #fee2e2;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            color: #dc2626;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .error-message i {
+            font-size: 1.2rem;
+        }
+        
+        .field-error {
+            color: #dc2626;
+            font-size: 0.85rem;
+            margin-top: 0.2rem;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        
+        .field-error i {
+            font-size: 0.9rem;
+        }
+        
+        .password-requirements {
+            background: #f8fafc;
+            border: 1px solid #e0f2fe;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        
+        .password-requirements.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .password-requirements p {
+            color: #2563eb;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .password-requirements ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .password-requirements li {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .password-requirements li i {
+            color: #94a3b8;
+            font-size: 0.8rem;
+        }
+        
+        .password-requirements li.valid i {
+            color: #10b981;
+        }
+        
+        .password-requirements li.invalid i {
+            color: #dc2626;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Animation classes */
+        [data-aos] {
+            pointer-events: none;
+        }
+        
+        [data-aos].aos-animate {
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="register-card" data-aos="fade-up">
+            <!-- Header -->
+            <div class="card-header" data-aos="fade-up" data-aos-delay="50">
+                <h4>RentalHub</h4>
+                <p>Create User Account</p>
+            </div>
+            
+            <!-- Registration Form -->
+            <form method="POST" id="registerForm" data-aos="fade-up" data-aos-delay="100">
+                {% csrf_token %}
+                
+                <!-- Display form errors -->
+                {% if form.non_field_errors %}
+                <div class="error-message">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    <div>
+                        <strong>Please correct the following errors:</strong>
+                        <ul class="mt-2 mb-0">
+                            {% for error in form.non_field_errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Username Field -->
+                <div class="mb-2">
+                    <label for="{{ form.username.id_for_label }}" class="form-label">
+                        <i class="bi bi-person"></i>
+                        Username
+                    </label>
+                    {{ form.username }}
+                    {% if form.username.errors %}
+                    <div class="field-error">
+                        <i class="bi bi-exclamation-circle"></i>
+                        {% for error in form.username.errors %}{{ error }}{% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Email Field -->
+                <div class="mb-2">
+                    <label for="{{ form.email.id_for_label }}" class="form-label">
+                        <i class="bi bi-envelope"></i>
+                        Email Address
+                    </label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                    <div class="field-error">
+                        <i class="bi bi-exclamation-circle"></i>
+                        {% for error in form.email.errors %}{{ error }}{% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Password Field -->
+                <div class="mb-2">
+                    <label for="{{ form.password1.id_for_label }}" class="form-label">
+                        <i class="bi bi-lock"></i>
+                        Password
+                    </label>
+                    {{ form.password1 }}
+                    
+                    <!-- Password Requirements Tooltip -->
+                    <div class="password-requirements" id="passwordRequirements">
+                        <p><i class="bi bi-shield-check"></i>Password must contain:</p>
+                        <ul>
+                            <li id="req-length"><i class="bi bi-circle"></i> At least 8 characters</li>
+                            <li id="req-uppercase"><i class="bi bi-circle"></i> At least one uppercase letter</li>
+                            <li id="req-lowercase"><i class="bi bi-circle"></i> At least one lowercase letter</li>
+                            <li id="req-number"><i class="bi bi-circle"></i> At least one number</li>
+                            <li id="req-special"><i class="bi bi-circle"></i> At least one special character (!@#$%^&*)</li>
+                        </ul>
+                    </div>
+                    
+                    {% if form.password1.errors %}
+                    <div class="field-error">
+                        <i class="bi bi-exclamation-circle"></i>
+                        {% for error in form.password1.errors %}{{ error }}{% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Confirm Password Field -->
+                <div class="mb-2">
+                    <label for="{{ form.password2.id_for_label }}" class="form-label">
+                        <i class="bi bi-lock-fill"></i>
+                        Confirm Password
+                    </label>
+                    {{ form.password2 }}
+                    {% if form.password2.errors %}
+                    <div class="field-error">
+                        <i class="bi bi-exclamation-circle"></i>
+                        {% for error in form.password2.errors %}{{ error }}{% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Registration Button -->
+                <button type="submit" class="btn-register" id="submitBtn">
+                    <i class="bi bi-person-plus"></i>
+                    Create Account
+                </button>
+            </form>
+            
+            <!-- Login Link -->
+            <div class="login-link" data-aos="fade-up" data-aos-delay="150">
+                <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+            </div>
+            
+            <!-- Back to Home -->
+            <div class="back-home" data-aos="fade-up" data-aos-delay="200">
+                <a href="{% url 'index' %}">
+                    <i class="bi bi-arrow-left"></i>
+                    Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- AOS Animation Library -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 20
+        });
+
+        // Password validation and requirements display
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordInput = document.getElementById('{{ form.password1.id_for_label }}');
+            const requirementsBox = document.getElementById('passwordRequirements');
+            
+            if (passwordInput) {
+                // Show requirements when password field is focused
+                passwordInput.addEventListener('focus', function() {
+                    requirementsBox.classList.add('show');
+                });
+                
+                // Hide requirements when clicking outside (optional)
+                passwordInput.addEventListener('blur', function(e) {
+                    // Small delay to allow clicking inside requirements
+                    setTimeout(() => {
+                        if (!requirementsBox.contains(document.activeElement)) {
+                            requirementsBox.classList.remove('show');
+                        }
+                    }, 200);
+                });
+                
+                // Real-time password validation
+                passwordInput.addEventListener('input', function() {
+                    const password = this.value;
+                    
+                    // Length check
+                    const lengthValid = password.length >= 8;
+                    updateRequirement('req-length', lengthValid);
+                    
+                    // Uppercase check
+                    const uppercaseValid = /[A-Z]/.test(password);
+                    updateRequirement('req-uppercase', uppercaseValid);
+                    
+                    // Lowercase check
+                    const lowercaseValid = /[a-z]/.test(password);
+                    updateRequirement('req-lowercase', lowercaseValid);
+                    
+                    // Number check
+                    const numberValid = /[0-9]/.test(password);
+                    updateRequirement('req-number', numberValid);
+                    
+                    // Special character check
+                    const specialValid = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+                    updateRequirement('req-special', specialValid);
+                    
+                    // Update input class
+                    if (password.length > 0) {
+                        if (lengthValid && uppercaseValid && lowercaseValid && numberValid && specialValid) {
+                            this.classList.add('valid');
+                            this.classList.remove('error');
+                        } else {
+                            this.classList.add('error');
+                            this.classList.remove('valid');
+                        }
+                    } else {
+                        this.classList.remove('valid', 'error');
+                    }
+                });
+                
+                // Confirm password validation
+                const confirmInput = document.getElementById('{{ form.password2.id_for_label }}');
+                if (confirmInput) {
+                    confirmInput.addEventListener('input', function() {
+                        if (this.value.length > 0) {
+                            if (this.value === passwordInput.value) {
+                                this.classList.add('valid');
+                                this.classList.remove('error');
+                            } else {
+                                this.classList.add('error');
+                                this.classList.remove('valid');
+                            }
+                        } else {
+                            this.classList.remove('valid', 'error');
+                        }
+                    });
+                }
+            }
+            
+            function updateRequirement(elementId, isValid) {
+                const element = document.getElementById(elementId);
+                if (element) {
+                    const icon = element.querySelector('i');
+                    if (isValid) {
+                        element.classList.add('valid');
+                        element.classList.remove('invalid');
+                        icon.className = 'bi bi-check-circle-fill';
+                    } else {
+                        element.classList.add('invalid');
+                        element.classList.remove('valid');
+                        icon.className = 'bi bi-circle';
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

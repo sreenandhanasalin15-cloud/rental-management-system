@@ -1,0 +1,420 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Booking Confirmation | RentalHub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #f0f9ff 100%);
+            color: #334155;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .confirmation-card {
+            background: #ffffff;
+            border-radius: 24px;
+            border: 1px solid #e0f2fe;
+            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.05);
+            padding: 2.5rem;
+            max-width: 700px;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .confirmation-card:hover {
+            box-shadow: 0 25px 50px rgba(37, 99, 235, 0.08);
+            border-color: #93c5fd;
+        }
+
+        .success-icon {
+            width: 90px;
+            height: 90px;
+            background: #d4edda;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            border: 3px solid #c3e6cb;
+        }
+
+        .success-icon i {
+            font-size: 3.5rem;
+            color: #155724;
+        }
+
+        h2 {
+            color: #0f172a;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .booking-id-badge {
+            background: #eff6ff;
+            color: #2563eb;
+            padding: 0.5rem 1.5rem;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            display: inline-block;
+            margin: 1rem 0;
+            border: 1px solid #dbeafe;
+        }
+
+        .booking-details {
+            background: #f8fafc;
+            border: 1px solid #e0f2fe;
+            border-radius: 20px;
+            padding: 1.8rem;
+            margin: 2rem 0;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #e0f2fe;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: #64748b;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .detail-label i {
+            color: #2563eb;
+            font-size: 1.1rem;
+        }
+
+        .detail-value {
+            color: #2563eb;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .total-row {
+            background: #eff6ff;
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin: 1.5rem 0;
+        }
+
+        .total-label {
+            color: #334155;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .total-amount {
+            color: #2563eb;
+            font-weight: 700;
+            font-size: 2rem;
+        }
+
+        .advance-box {
+            background: #fff3cd;
+            border: 1px solid #ffe8a1;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .advance-title {
+            color: #856404;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .advance-value {
+            color: #856404;
+            font-weight: 700;
+            font-size: 1.8rem;
+        }
+
+        .item-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #ffffff;
+            border: 1px solid #e0f2fe;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+        }
+
+        .item-image-small {
+            width: 70px;
+            height: 70px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 1px solid #dbeafe;
+        }
+
+        .item-details h5 {
+            color: #0f172a;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .item-details p {
+            color: #64748b;
+            margin-bottom: 0;
+            font-size: 0.9rem;
+        }
+
+        .btn-dashboard {
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 14px;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            width: 100%;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-dashboard:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
+            color: white;
+        }
+
+        .btn-bookings {
+            background: transparent;
+            color: #2563eb;
+            border: 1px solid #dbeafe;
+            border-radius: 14px;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            width: 100%;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .btn-bookings:hover {
+            background: #eff6ff;
+            border-color: #2563eb;
+            transform: translateY(-2px);
+        }
+
+        .print-btn {
+            background: transparent;
+            color: #64748b;
+            border: 1px solid #e0f2fe;
+            border-radius: 10px;
+            padding: 0.6rem 1.5rem;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            cursor: pointer;
+            margin-top: 1.5rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .print-btn:hover {
+            background: #f8fafc;
+            color: #2563eb;
+            border-color: #2563eb;
+        }
+
+        .email-note {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e0f2fe;
+        }
+
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            .confirmation-card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="confirmation-card" data-aos="fade-up">
+        <!-- Success Icon -->
+        <div class="success-icon">
+            <i class="bi bi-check-lg"></i>
+        </div>
+        
+        <!-- Title -->
+        <h2 class="text-center">Booking Confirmed!</h2>
+        <p class="text-muted text-center">Your booking request has been sent successfully</p>
+        
+        <!-- Booking ID Badge -->
+        <div class="text-center">
+            <span class="booking-id-badge">
+                <i class="bi bi-hash me-1"></i>Booking ID: #{{ booking.id }}
+            </span>
+        </div>
+
+        <!-- Item Information -->
+        <div class="item-info">
+            {% if booking.item.image %}
+            <img src="{{ booking.item.image.url }}" class="item-image-small" alt="{{ booking.item.name }}">
+            {% else %}
+            <div class="item-image-small bg-light d-flex align-items-center justify-content-center">
+                <i class="bi bi-image text-muted"></i>
+            </div>
+            {% endif %}
+            <div class="item-details">
+                <h5>{{ booking.item.name }}</h5>
+                <p><i class="bi bi-shop me-1"></i>{{ booking.item.owner.username }}</p>
+            </div>
+        </div>
+
+        <!-- Booking Details -->
+        <div class="booking-details">
+            <h6 class="mb-3" style="color: #2563eb;">
+                <i class="bi bi-info-circle me-2"></i>Booking Details
+            </h6>
+            
+            <div class="detail-row">
+                <span class="detail-label">
+                    <i class="bi bi-calendar-plus"></i> Start Date
+                </span>
+                <span class="detail-value">{{ booking.start_date|date:"l, F j, Y" }}</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">
+                    <i class="bi bi-calendar-minus"></i> End Date
+                </span>
+                <span class="detail-value">{{ booking.end_date|date:"l, F j, Y" }}</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">
+                    <i class="bi bi-clock"></i> Duration
+                </span>
+                <span class="detail-value">{{ total_days }} day{{ total_days|pluralize }}</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">
+                    <i class="bi bi-box"></i> Quantity
+                </span>
+                <span class="detail-value">{{ booking.quantity }}</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">
+                    <i class="bi bi-currency-rupee"></i> Price per day
+                </span>
+                <span class="detail-value">₹{{ booking.item.price_per_day|floatformat:0 }}</span>
+            </div>
+        </div>
+
+        <!-- Advance Payment Box -->
+        <div class="advance-box">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="advance-title">
+                    <i class="bi bi-credit-card me-2"></i>Advance Paid (30%)
+                </span>
+                <span class="advance-value">₹{{ advance_paid|floatformat:0 }}</span>
+            </div>
+            <p class="small text-warning mb-0">
+                <i class="bi bi-info-circle me-1"></i>
+                This amount will be refunded if the owner rejects your request
+            </p>
+        </div>
+
+        <!-- Total Amount -->
+        <div class="total-row">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="total-label">Total Amount</span>
+                <span class="total-amount">₹{{ total_price|floatformat:0 }}</span>
+            </div>
+            <div class="d-flex justify-content-between align-items-center pt-2 border-top border-info">
+                <span class="text-muted">
+                    <i class="bi bi-cash me-1"></i>Balance at pickup
+                </span>
+                <span class="fw-bold fs-4" style="color: #2563eb;">₹{{ balance_amount|floatformat:0 }}</span>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="mt-4 no-print">
+            <a href="{% url 'rentals:user_dashboard' %}" class="btn-dashboard">
+                <i class="bi bi-house-door me-2"></i>Go to Dashboard
+            </a>
+            <a href="{% url 'rentals:my_bookings' %}" class="btn-bookings">
+                <i class="bi bi-calendar-check me-2"></i>View My Bookings
+            </a>
+            
+            <!-- Print Button -->
+            <div class="text-center">
+                <button class="print-btn" onclick="window.print()">
+                    <i class="bi bi-printer me-2"></i>Print Confirmation
+                </button>
+            </div>
+        </div>
+
+        <!-- Email Note -->
+        <div class="email-note text-center no-print">
+            <i class="bi bi-envelope me-1"></i>
+            A confirmation email has been sent to your registered email address
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 20
+        });
+    </script>
+</body>
+</html>

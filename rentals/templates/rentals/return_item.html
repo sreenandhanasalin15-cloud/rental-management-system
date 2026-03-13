@@ -1,0 +1,198 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Return Item | RentalHub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #f0f9ff 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 600px; }
+        .card {
+            background: white;
+            border-radius: 20px;
+            border: 1px solid #e0f2fe;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.05);
+        }
+        h3 { color: #2563eb; font-weight: 700; }
+        .form-label { font-weight: 600; color: #334155; }
+        .form-control, .form-select {
+            border: 1px solid #dbeafe;
+            border-radius: 12px;
+            padding: 0.8rem;
+        }
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 0.8rem;
+            font-weight: 600;
+            width: 100%;
+        }
+        .btn-primary:hover { background: #1d4ed8; }
+        .btn-secondary {
+            background: white;
+            color: #2563eb;
+            border: 1px solid #dbeafe;
+            border-radius: 12px;
+            padding: 0.8rem;
+            font-weight: 600;
+            width: 100%;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        .damage-section {
+            background: #fff3cd;
+            border: 1px solid #ffe8a1;
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        .fee-calculation {
+            background: #e8f0fe;
+            border: 1px solid #b8daff;
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        .overdue-badge {
+            background: #dc3545;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: inline-block;
+        }
+        .info-text {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        .fine-amount {
+            color: #dc3545;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="card">
+            <h3 class="text-center mb-4">
+                <i class="bi bi-box-arrow-left me-2"></i>Process Item Return
+            </h3>
+            
+            <div class="alert alert-info">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-info-circle-fill me-3 fs-4"></i>
+                    <div>
+                        <strong>Item:</strong> {{ booking.item.name }}<br>
+                        <strong>Renter:</strong> {{ booking.user.username }}<br>
+                        <strong>Scheduled Return:</strong> {{ booking.end_date|date:"M d, Y" }}
+                        {% if is_overdue %}
+                            <span class="overdue-badge ms-2">Overdue by {{ days_overdue }} days</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            {% if is_overdue %}
+            <div class="fee-calculation">
+                <h6><i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>Late Fee Calculation</h6>
+                <p class="mb-1">Daily Rate: ₹{{ daily_rate|floatformat:2 }}</p>
+                <p class="mb-1">Late Fee (10% per day): ₹{{ late_fee_per_day|floatformat:2 }}/day</p>
+                <p class="mb-1">Days Overdue: {{ days_overdue }}</p>
+                <p class="fw-bold mt-2">Estimated Late Fee: <span class="fine-amount">₹{{ estimated_late_fee|floatformat:2 }}</span></p>
+                <small class="info-text">This will be automatically calculated based on actual return date</small>
+            </div>
+            {% endif %}
+            
+            <form method="POST">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label class="form-label">
+                        <i class="bi bi-calendar-check me-2"></i>Actual Return Date
+                    </label>
+                    <input type="date" name="actual_return_date" class="form-control" 
+                           value="{{ now|date:'Y-m-d' }}" required>
+                </div>
+                
+                <div class="damage-section">
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" name="has_damage" id="hasDamage">
+                        <label class="form-check-label fw-bold" for="hasDamage">
+                            <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>
+                            Report Damage / Charge Fine
+                        </label>
+                    </div>
+                    
+                    <div id="damageFields" style="display: none;">
+                        <div class="mb-3">
+                            <label class="form-label">Damage Description</label>
+                            <textarea name="damage_description" class="form-control" rows="3" 
+                                      placeholder="Describe the damage to the item..."></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Fine Amount (₹)</label>
+                            <input type="number" name="fine_amount" class="form-control" step="0.01" min="0" 
+                                   placeholder="Enter fine amount" value="0">
+                            <small class="info-text">Enter 0 if no fine</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="d-grid gap-2 mt-4">
+                    <button type="submit" class="btn-primary">
+                        <i class="bi bi-check-circle me-2"></i>Confirm Return
+                    </button>
+                    <a href="{% url 'rentals:owner_bookings' %}" class="btn-secondary">
+                        <i class="bi bi-x-lg me-2"></i>Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('hasDamage').addEventListener('change', function() {
+            const damageFields = document.getElementById('damageFields');
+            damageFields.style.display = this.checked ? 'block' : 'none';
+            
+            // Set default value when checked
+            if (this.checked) {
+                document.querySelector('input[name="fine_amount"]').value = '0';
+            } else {
+                document.querySelector('textarea[name="damage_description"]').value = '';
+                document.querySelector('input[name="fine_amount"]').value = '';
+            }
+        });
+        
+        // Auto-calculate late fee based on selected date
+        document.querySelector('input[name="actual_return_date"]').addEventListener('change', function() {
+            const scheduledDate = new Date('{{ booking.end_date|date:"Y-m-d" }}');
+            const actualDate = new Date(this.value);
+            
+            if (actualDate > scheduledDate) {
+                const diffTime = actualDate - scheduledDate;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                const lateFeePerDay = {{ late_fee_per_day }};
+                const estimatedFee = diffDays * lateFeePerDay;
+                
+                // Show notification
+                alert(`Item will be ${diffDays} days late. Estimated late fee: ₹${estimatedFee.toFixed(2)}`);
+            }
+        });
+    </script>
+</body>
+</html>

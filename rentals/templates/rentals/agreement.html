@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rental Agreement</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f6f8;
+            margin: 0;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        /* PDF Card */
+        .pdf-card {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .pdf-icon {
+            font-size: 60px;
+        }
+
+        .pdf-info {
+            flex: 1;
+        }
+
+        .btn {
+            background: #007bff;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .btn:hover {
+            background: #0056b3;
+        }
+
+        .accept-section {
+            margin-top: 25px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1e7e34;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <h2>Rental Agreement #{{ booking.id }}</h2>
+
+    <!-- ✅ PDF Preview Card (no iframe) -->
+    <div class="pdf-card">
+
+        <div class="pdf-icon">📄</div>
+
+        <div class="pdf-info">
+            <strong>Rental Agreement Document</strong><br>
+            View your legally binding agreement before confirming booking.
+        </div>
+
+        <!-- Opens new tab -->
+        <a class="btn"
+           href="{% url 'rentals:agreement_pdf' booking.id %}"
+           target="_blank">
+            View PDF
+        </a>
+
+    </div>
+
+
+    <!-- ✅ Accept Section -->
+    <div class="accept-section">
+
+        <form method="post"
+              action="{% url 'rentals:accept_agreement' booking.id %}">
+
+            {% csrf_token %}
+
+            <label>
+                <input type="checkbox" required>
+                I have read and accept the rental agreement
+            </label>
+
+            <br><br>
+
+            <button type="submit">Confirm Booking</button>
+
+            <a href="{% url 'rentals:my_bookings' %}" style="margin-left:10px;">
+                Cancel
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
+</body>
+</html>

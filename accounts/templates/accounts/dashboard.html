@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Dashboard</h2>
+
+<p>Welcome {{ request.user.username }}</p>
+
+{% if request.user.role == 'owner' %}
+    <p>You are logged in as OWNER.</p>
+{% else %}
+    <p>You are logged in as USER (Renter).</p>
+{% endif %}
+
+<a href="{% url 'logout'%}">Logout</a>
+
+</body>
+</html>
